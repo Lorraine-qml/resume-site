@@ -1,0 +1,22 @@
+# 项目背景
+这是一个高级产品经理的个人作品集网页。整体风格要求：清爽、简约、高级商务画册风。拒绝中规中矩的瀑布流。
+
+# 技术栈
+- 框架：React + Vite + TypeScript
+- 样式：Tailwind CSS (不使用行内 style)
+- 动效：Framer Motion
+- 图标：Lucide-React
+
+# 设计规范
+- 主色（普鲁斯蓝）：#003153 (用于主标题、主文字、深色背景)
+- 高光色（睿智金）：#b68f75 (极度克制，仅用于大数字、高亮边框、按钮Hover)
+- 背景色：主背景纯白 #FFFFFF，区块背景浅灰蓝 #F8FAFC
+- 字体：PingFang SC, Inter
+- 阴影：极浅 (如 0 4px 20px rgba(0,49,83,0.04))
+- 圆角：12px
+
+# 代码规范
+1. 组件拆分：页面必须拆分为独立的 Section 组件（如 Hero, BentoGrid, Portfolio, Timeline, Footer）。
+2. 避免大文件，UI 组件（如卡片、按钮）尽量抽离为通用组件。
+3. 所有的 Tailwind 颜色变量必须配置在 tailwind.config.js 中，代码中必须使用如 `text-brand-blue`, `bg-brand-gold` 的语义化类名，禁止直接写 `#003153`。
+4. 必须使用 TypeScript 定义 Props 接口。

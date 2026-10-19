@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply overflow-x-hidden bg-white font-sans text-brand-blue antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-gold/30 text-brand-blue;
+  }
+}
+
+@layer components {
+  .orb-stage {
+    perspective: 900px;
+  }
+
+  .orb-preserve {
+    transform-style: preserve-3d;
+  }
+
+  .orb-arc-mask {
+    -webkit-mask: radial-gradient(circle, transparent 63%, #000 64% 76%, transparent 77%);
+    mask: radial-gradient(circle, transparent 63%, #000 64% 76%, transparent 77%);
+  }
+
+  .flip-stage {
+    perspective: 1200px;
+  }
+}
