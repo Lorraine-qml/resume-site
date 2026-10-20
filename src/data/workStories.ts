@@ -47,7 +47,7 @@ export interface CockpitStory {
 
 export const cockpitStory: CockpitStory = {
   kicker: "决策指挥中枢",
-  title: "数据可视化驾驶舱",
+  title: "宏观决策驾驶舱",
   summary: "整合跨板块数据孤岛，为集团与政府提供“一图观全域、一表掌经营”的宏观决策支持。",
   industries: [
     {
@@ -60,8 +60,8 @@ export const cockpitStory: CockpitStory = {
       highlights: ["一客一开发", "非标业务抽象", "可配置 SaaS"],
       duties: [
         {
-          title: "产品 0-1 构建说明",
-          text: "产品从 0 到 1 做成可配置体系：底座、中台到智能化分层，零代码表单和多级流程承接不同客户。",
+          title: "产品说明",
+          text: "主导产品从 0 到 1 的三阶段演进，从园区基础数据底座升级为数据+AI 驱动的智能平台，覆盖 PC 管理端/大屏端/小程序三端，产品能力可复用于智慧园区、社区、政务、园林等多场景。",
         },
         {
           title: "全链路管控与交付",

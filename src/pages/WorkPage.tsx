@@ -2,11 +2,14 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { works, type WorkItem } from "../data/content"
+import { consoleStory } from "../data/consoleStory"
+import { neuralStory } from "../data/neuralStory"
 import { cockpitStory, type WorkIndustry } from "../data/workStories"
 import { ChangxingCase } from "../components/works/ChangxingCase"
 import { ProjectIntro } from "../components/works/ProjectIntro"
 import { FactoryCase } from "../components/works/FactoryCase"
 import { GardenCase } from "../components/works/GardenCase"
+import { ConsoleModuleCase } from "../components/works/ConsoleModuleCase"
 import { MobileCase } from "../components/works/MobileCase"
 import { OtherCase } from "../components/works/OtherCase"
 import { TrafficCase } from "../components/works/TrafficCase"
@@ -29,12 +32,12 @@ function Crumb({ work }: { work: WorkItem }) {
             event.preventDefault()
             navigate("/#portfolio")
           }}
-          className="hover:text-brand-blue"
+          className="relative font-semibold text-brand-blue after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-brand-gold"
         >
           作品矩阵
         </a>
         <span className="mx-2 text-line">/</span>
-        <span className="text-brand-blue">{work.title}</span>
+        <span className="font-medium text-brand-blue">{work.title}</span>
       </p>
       <a
         href="/#portfolio"
@@ -115,15 +118,11 @@ function CockpitPage({ work }: { work: WorkItem }) {
 
   return (
     <>
-      <p className="text-xs tracking-[0.2em] text-brand-gold">{cockpitStory.kicker}</p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-brand-blue md:text-4xl">{cockpitStory.title}</h1>
-      <p className="mt-4 max-w-3xl text-base leading-relaxed text-ink">{cockpitStory.summary}</p>
-
-      <div className="mt-10">
+      <div>
         <div
           role="tablist"
           aria-label="行业"
-          className="grid w-full grid-cols-3 gap-1 rounded-3xl bg-track p-1.5 max-lg:pr-20 md:grid-cols-6 md:rounded-full"
+          className="flex w-full gap-1 rounded-full bg-track p-1.5 max-lg:pr-20"
         >
           {cockpitStory.industries.map((item) => {
             const selected = item.id === industry.id
@@ -134,7 +133,8 @@ function CockpitPage({ work }: { work: WorkItem }) {
                 role="tab"
                 aria-selected={selected}
                 onClick={() => setActive(item.id)}
-                className="group relative rounded-full px-2 py-3 text-center text-sm tracking-wide"
+                onMouseEnter={() => setActive(item.id)}
+                className="group relative min-w-0 flex-1 rounded-full px-1 py-2.5 text-center text-xs tracking-wide sm:px-2 sm:text-sm"
               >
                 {selected ? (
                   <motion.span
@@ -144,7 +144,7 @@ function CockpitPage({ work }: { work: WorkItem }) {
                   />
                 ) : null}
                 <span
-                  className={`relative z-10 transition-colors duration-300 ${
+                  className={`relative z-10 block truncate transition-colors duration-300 ${
                     selected ? "font-semibold text-brand-blue" : "font-medium text-muted group-hover:text-brand-blue"
                   }`}
                 >
@@ -154,7 +154,7 @@ function CockpitPage({ work }: { work: WorkItem }) {
             )
           })}
         </div>
-        <div className="mt-10">
+        <div className="mt-5">
           {industry.id === "gov" ? (
             <ChangxingCase />
           ) : industry.id === "factory" ? (
@@ -228,6 +228,75 @@ function MobilePage({ work }: { work: WorkItem }) {
   )
 }
 
+function ConsolePage({ work }: { work: WorkItem }) {
+  const [active, setActive] = useState(consoleStory.modules[0].id)
+  const module = consoleStory.modules.find((item) => item.id === active) ?? consoleStory.modules[0]
+  const story = consoleStory.stories[module.id]
+
+  return (
+    <>
+      <div>
+        <div
+          role="tablist"
+          aria-label="中台业务模块"
+          className="flex w-full gap-1 rounded-full bg-track p-1.5"
+        >
+          {consoleStory.modules.map((item) => {
+            const selected = item.id === module.id
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setActive(item.id)}
+                onMouseEnter={() => setActive(item.id)}
+                className="group relative min-w-0 flex-1 rounded-full px-1 py-3 text-center text-xs tracking-wide sm:px-2 sm:text-sm"
+              >
+                {selected ? (
+                  <motion.span
+                    layoutId="console-tab"
+                    className="absolute inset-0 rounded-full bg-white shadow-float"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                ) : null}
+                <span
+                  className={`relative z-10 block truncate transition-colors duration-300 ${
+                    selected ? "font-semibold text-brand-blue" : "font-medium text-muted group-hover:text-brand-blue"
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {story ? (
+          <ConsoleModuleCase story={story} />
+        ) : (
+          <div className="mt-5 rounded-2xl border border-line bg-white px-6 py-8 shadow-soft sm:px-8">
+            <p className="text-xs tracking-[0.16em] text-brand-gold">全流程模块</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-brand-blue">{module.label}</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-[1.75] text-muted">模块详情内容待补充。</p>
+          </div>
+        )}
+      </div>
+
+      <NextWork work={work} />
+    </>
+  )
+}
+
+function NeuralPage({ work }: { work: WorkItem }) {
+  return (
+    <>
+      <ConsoleModuleCase story={neuralStory} lifecyclePlacement="before" />
+      <NextWork work={work} />
+    </>
+  )
+}
+
 function BriefPage({ work }: { work: WorkItem }) {
   const slides = [
     { id: `${work.id}-a`, caption: "界面草图", scene: 0 as const },
@@ -273,11 +342,21 @@ export function WorkPage({ work }: WorkPageProps) {
   }, [work.id, work.title])
 
   return (
-    <article className="bg-surface px-6 pb-20 pt-24 lg:px-10">
+    <article className="bg-surface px-6 pb-20 pt-20 lg:px-10">
       <div className="mx-auto w-full">
         <Crumb work={work} />
-        <div className="mt-10">
-          {work.id === "cockpit" ? <CockpitPage work={work} /> : work.id === "mobile" ? <MobilePage work={work} /> : <BriefPage work={work} />}
+        <div className="mt-5">
+          {work.id === "cockpit" ? (
+            <CockpitPage work={work} />
+          ) : work.id === "console" ? (
+            <ConsolePage work={work} />
+          ) : work.id === "neural" ? (
+            <NeuralPage work={work} />
+          ) : work.id === "mobile" ? (
+            <MobilePage work={work} />
+          ) : (
+            <BriefPage work={work} />
+          )}
         </div>
       </div>
     </article>

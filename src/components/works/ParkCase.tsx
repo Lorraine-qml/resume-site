@@ -1,6 +1,6 @@
 import { ArrowUpRight, Lightbulb, Rocket } from "lucide-react"
-import { cockpitStory } from "../../data/workStories"
 import { parkShots } from "../../data/parkStory"
+import { cockpitStory } from "../../data/workStories"
 import { navigate } from "../../lib/route"
 import { Button } from "../ui/Button"
 import { FilmStage } from "./FilmStage"
@@ -40,12 +40,7 @@ export function ParkCase() {
           </ul>
         </div>
       </div>
-      <ProjectIntro
-        overview={park.summary}
-        highlights={park.highlights}
-        left={park.duties[0]}
-        right={park.duties[1]}
-      />
+      <ProjectIntro left={park.duties[0]} right={park.duties[1]} />
       <article className="mt-14 grid min-w-0 items-center gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="min-w-0 lg:order-2">
           <FilmStage

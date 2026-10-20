@@ -109,6 +109,7 @@ export function BentoGrid({ id = "bento" }: BentoGridProps) {
                   role="tab"
                   aria-selected={selected}
                   onClick={() => setActive(item.id)}
+                  onMouseEnter={() => setActive(item.id)}
                   className={`relative z-10 rounded-full px-1 py-2.5 text-center text-xs transition-colors duration-300 sm:text-sm ${
                     selected ? "text-white" : "text-brand-blue/55 hover:text-ink"
                   }`}

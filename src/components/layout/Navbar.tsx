@@ -1,12 +1,13 @@
-import { useCallback, useState, type MouseEvent } from "react"
+import { useCallback, useEffect, useState, type MouseEvent } from "react"
 import { Menu, MessageCircle, X } from "lucide-react"
 import { resumeFileName, resumeHref } from "../../data/content"
-import { navigate } from "../../lib/route"
+import { navigate, useHash, usePathname } from "../../lib/route"
 import { ContactModal } from "../ui/ContactModal"
 
 interface NavItem {
   label: string
   href: string
+  sectionId: string
 }
 
 interface NavbarProps {
@@ -14,9 +15,9 @@ interface NavbarProps {
 }
 
 const defaultItems: NavItem[] = [
-  { label: "能力图谱", href: "#bento" },
-  { label: "作品矩阵", href: "#portfolio" },
-  { label: "职业路径", href: "#timeline" },
+  { label: "能力图谱", href: "#bento", sectionId: "bento" },
+  { label: "作品矩阵", href: "#portfolio", sectionId: "portfolio" },
+  { label: "职业路径", href: "#timeline", sectionId: "timeline" },
 ]
 
 function followSection(event: MouseEvent<HTMLAnchorElement>, href: string) {
@@ -35,9 +36,60 @@ function goHome(event: MouseEvent<HTMLAnchorElement>) {
   navigate("/")
 }
 
+function useActiveSection(sectionIds: string[], enabled: boolean) {
+  const [activeId, setActiveId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!enabled) {
+      setActiveId(null)
+      return
+    }
+
+    const nodes = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((node): node is HTMLElement => Boolean(node))
+
+    if (nodes.length === 0) return
+
+    const syncFromScroll = () => {
+      const marker = window.scrollY + window.innerHeight * 0.28
+      let current: string | null = null
+      for (const node of nodes) {
+        if (node.offsetTop <= marker) current = node.id
+      }
+      if (window.scrollY < 80) current = null
+      setActiveId(current)
+    }
+
+    syncFromScroll()
+    window.addEventListener("scroll", syncFromScroll, { passive: true })
+    window.addEventListener("resize", syncFromScroll)
+    return () => {
+      window.removeEventListener("scroll", syncFromScroll)
+      window.removeEventListener("resize", syncFromScroll)
+    }
+  }, [enabled, sectionIds.join("|")])
+
+  return activeId
+}
+
+function navClassName(active: boolean) {
+  return active
+    ? "relative text-sm font-semibold text-brand-blue after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-brand-gold"
+    : "text-sm text-brand-blue/70 transition-colors hover:text-brand-blue"
+}
+
 export function Navbar({ items = defaultItems }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
+  const path = usePathname()
+  const hash = useHash()
+  const onWorkRoute = path.startsWith("/works/")
+  const onHome = path === "/"
+  const scrollActive = useActiveSection(
+    items.map((item) => item.sectionId),
+    onHome,
+  )
 
   const close = () => setOpen(false)
   const openContact = () => {
@@ -45,6 +97,13 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
     setContactOpen(true)
   }
   const closeContact = useCallback(() => setContactOpen(false), [])
+
+  const isItemActive = (item: NavItem) => {
+    if (onWorkRoute) return item.sectionId === "portfolio"
+    if (!onHome) return false
+    if (hash === `#${item.sectionId}`) return true
+    return scrollActive === item.sectionId
+  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-brand-blue/10 bg-white/80 shadow-soft backdrop-blur-md">
@@ -66,17 +125,21 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
         </a>
         <div className="hidden items-center md:flex">
           <ul className="flex items-center gap-8">
-            {items.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  onClick={(event) => followSection(event, item.href)}
-                  className="text-sm text-brand-blue/70 transition-colors hover:text-brand-blue"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {items.map((item) => {
+              const active = isItemActive(item)
+              return (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={(event) => followSection(event, item.href)}
+                    className={navClassName(active)}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              )
+            })}
           </ul>
           <div className="ml-12 flex items-center gap-3">
             <a
@@ -109,20 +172,24 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
       {open ? (
         <div className="fixed inset-x-0 bottom-0 top-16 z-50 border-t border-brand-blue/10 bg-white px-6 py-8 md:hidden">
           <ul className="space-y-5">
-            {items.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  onClick={(event) => {
-                    close()
-                    followSection(event, item.href)
-                  }}
-                  className="block text-lg text-brand-blue"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {items.map((item) => {
+              const active = isItemActive(item)
+              return (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={(event) => {
+                      close()
+                      followSection(event, item.href)
+                    }}
+                    className={`block text-lg ${active ? "font-semibold text-brand-blue" : "text-brand-blue/80"}`}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              )
+            })}
             <li>
               <a
                 href={resumeHref}

@@ -7,12 +7,7 @@ export function ChangxingCase() {
     <div>
       <p className="text-xs tracking-[0.16em] text-brand-gold">{changxingStory.tags}</p>
       <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">{changxingStory.title}</h3>
-      <ProjectIntro
-        overview={changxingStory.overviewLead}
-        highlights={["深海科技", "UE4 模型集成"]}
-        left={{ title: "产品 0-1 构建说明", text: changxingStory.duties[0].text }}
-        right={{ title: "全链路管控与交付", text: changxingStory.duties[1].text }}
-      />
+      <ProjectIntro left={changxingStory.duties[0]} right={changxingStory.duties[1]} />
       <ShotSpread
         shots={changxingStory.shots.map((shot) => ({
           id: shot.id,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Check, Copy, X } from "lucide-react"
@@ -23,6 +23,38 @@ const copyFields: CopyField[] = [
   { id: "email", label: "Email", value: email?.value ?? "" },
   { id: "wechat", label: "WeChat", value: wechatProfile.wechatId },
 ]
+
+function QrScannerFrame({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-brand-gold/25 bg-brand-blue/5 p-4 backdrop-blur-sm motion-safe:animate-frame-glow">
+      {/* Scanner corner brackets — breathing pulse, staggered */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-2 top-2 h-4 w-4 border-l-2 border-t-2 border-brand-gold motion-safe:animate-corner-pulse"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-2 top-2 h-4 w-4 border-r-2 border-t-2 border-brand-gold motion-safe:animate-corner-pulse motion-safe:[animation-delay:350ms]"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-2 left-2 h-4 w-4 border-b-2 border-l-2 border-brand-gold motion-safe:animate-corner-pulse motion-safe:[animation-delay:700ms]"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-2 right-2 h-4 w-4 border-b-2 border-r-2 border-brand-gold motion-safe:animate-corner-pulse motion-safe:[animation-delay:1050ms]"
+      />
+
+      {/* Horizontal scan beam */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-5 top-[12%] h-px bg-gradient-to-r from-transparent via-brand-gold to-transparent motion-safe:animate-scan-line"
+      />
+
+      {children}
+    </div>
+  )
+}
 
 export function ContactModal({ open, onClose }: ContactModalProps) {
   const [copied, setCopied] = useState<string | null>(null)
@@ -87,7 +119,7 @@ export function ContactModal({ open, onClose }: ContactModalProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="contact-modal-title"
-            className="relative z-10 w-full max-w-[25rem] rounded-2xl bg-white px-6 py-6 shadow-modal"
+            className="relative z-10 w-full max-w-[36rem] rounded-2xl bg-white px-6 py-6 shadow-modal sm:px-7 sm:py-7"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -108,49 +140,58 @@ export function ContactModal({ open, onClose }: ContactModalProps) {
               </button>
             </div>
 
-            <h2 id="contact-modal-title" className="mt-5 text-xl font-bold tracking-tight text-brand-blue">
-              {ownerName}
-              <span className="ml-2 font-medium">{wechatProfile.name}</span>
-            </h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted">懂技术、通售前、精交付的复合型 PM</p>
+            <div className="mt-6 flex flex-col gap-8 sm:flex-row sm:items-stretch sm:gap-6">
+              {/* Left · 60% — contact details */}
+              <div className="min-w-0 sm:w-[60%] sm:pr-2">
+                <h2 id="contact-modal-title" className="text-xl font-bold tracking-tight text-brand-blue">
+                  {ownerName}
+                  <span className="ml-2 font-medium">{wechatProfile.name}</span>
+                </h2>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted">懂技术、通售前、精交付的复合型 PM</p>
 
-            <ul className="mt-6 space-y-4">
-              {copyFields.map((item) => {
-                const done = copied === item.id
-                return (
-                  <li key={item.id}>
-                    <span className="block text-[10px] uppercase tracking-[0.18em] text-brand-gold">{item.label}</span>
-                    <div className="mt-1 flex items-center gap-1.5">
-                      <span className="font-mono text-sm tracking-wide text-ink">{item.value}</span>
-                      <button
-                        type="button"
-                        onClick={() => copyValue(item.id, item.value)}
-                        aria-label={done ? `已复制${item.label}` : `复制${item.label}`}
-                        className="text-muted transition-colors hover:text-brand-gold"
-                      >
-                        {done ? <Check className="h-3.5 w-3.5 text-brand-gold" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
+                <ul className="mt-7 space-y-5">
+                  {copyFields.map((item) => {
+                    const done = copied === item.id
+                    return (
+                      <li key={item.id}>
+                        <span className="block text-[10px] uppercase tracking-[0.18em] text-brand-gold">
+                          {item.label}
+                        </span>
+                        <div className="mt-1.5 flex items-center gap-1.5">
+                          <span className="font-mono text-sm tracking-wide text-ink">{item.value}</span>
+                          <button
+                            type="button"
+                            onClick={() => copyValue(item.id, item.value)}
+                            aria-label={done ? `已复制${item.label}` : `复制${item.label}`}
+                            className="text-muted transition-colors hover:text-brand-gold"
+                          >
+                            {done ? (
+                              <Check className="h-3.5 w-3.5 text-brand-gold" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5" />
+                            )}
+                          </button>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
 
-            <div className="mt-6 flex items-start gap-4">
-              <p className="min-w-0 flex-1 border-t border-line pt-4 text-[10px] leading-relaxed text-muted">
-                初步了解已加载。如有意向，扫码发起【深度需求对齐】
-              </p>
-              <div className="flex w-[6.75rem] shrink-0 flex-col items-center">
-                <div className="rounded-lg border border-brand-gold/40 bg-gradient-to-br from-brand-gold/20 to-white p-1">
-                  <div className="h-24 w-24 overflow-hidden rounded-md bg-white">
+              {/* Right · 40% — deep-link / QR zone */}
+              <div className="flex min-w-0 flex-col items-center justify-center sm:w-[40%]">
+                <QrScannerFrame>
+                  <div className="mx-auto h-[7.25rem] w-[7.25rem] overflow-hidden rounded-md bg-white">
                     <img
                       src={wechatProfile.qr}
                       alt="微信二维码"
-                      className="w-[132%] max-w-none -translate-x-[12%] -translate-y-[24%]"
+                      className="h-full w-full object-cover object-center"
                     />
                   </div>
-                </div>
-                <p className="mt-1.5 text-center text-[10px] tracking-[0.14em] text-muted">WeChat Scan</p>
+                </QrScannerFrame>
+                <p className="mt-3 text-center text-[11px] leading-relaxed tracking-wide text-brand-blue">
+                  扫码进一步了解我，期待与您深入交流。
+                </p>
               </div>
             </div>
           </motion.div>

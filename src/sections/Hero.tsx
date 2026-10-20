@@ -2,14 +2,7 @@ import { motion } from "framer-motion"
 import { Button } from "../components/ui/Button"
 import { FloatTag } from "../components/ui/FloatTag"
 import { AiWorkspace } from "../components/visual/AiWorkspace"
-import {
-  heroFocus,
-  heroMetrics,
-  heroSkills,
-  heroTags,
-  resumeFileName,
-  resumeHref,
-} from "../data/content"
+import { heroFocus, heroMetrics, heroSkills, heroTags } from "../data/content"
 
 interface HeroProps {
   id?: string
@@ -54,8 +47,8 @@ export function Hero({ id = "hero" }: HeroProps) {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href="#portfolio">探索 0-1 实战案例</Button>
-            <Button variant="gold" href={resumeHref} download={resumeFileName}>
-              下载完整 PDF
+            <Button variant="gold" href="#timeline">
+              了解职业路径
             </Button>
           </div>
         </motion.div>

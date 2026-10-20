@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { ArrowRight, BarChart3, Code2, Rocket, type LucideIcon } from "lucide-react"
 import { SectionHeading } from "../components/ui/SectionHeading"
 import { careerPath, careerStages, type CareerAccent, type CareerIcon } from "../data/content"
+import { UnifiedTagList } from "../components/ui/UnifiedTag"
 
 interface TimelineProps {
   id?: string
@@ -70,13 +71,7 @@ export function Timeline({ id = "timeline" }: TimelineProps) {
 
                     <p className="mt-5 text-sm leading-7 text-ink">{item.summary}</p>
 
-                    <ul className="mt-5 flex flex-wrap gap-2">
-                      {item.tags.map((tag) => (
-                        <li key={tag} className="rounded-full bg-white px-2.5 py-1 text-[11px] text-muted ring-1 ring-line">
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
+                    <UnifiedTagList tags={item.tags} className="mt-5" />
 
                     <blockquote className={`mt-5 border-l-2 pl-3 text-sm italic leading-7 text-muted ${accentQuote[item.accent]}`}>
                       {item.insight}

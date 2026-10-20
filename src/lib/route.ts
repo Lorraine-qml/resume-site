@@ -26,3 +26,19 @@ export function usePathname() {
 
   return path
 }
+
+export function useHash() {
+  const [hash, setHash] = useState(() => window.location.hash)
+
+  useEffect(() => {
+    const sync = () => setHash(window.location.hash)
+    window.addEventListener("popstate", sync)
+    window.addEventListener("hashchange", sync)
+    return () => {
+      window.removeEventListener("popstate", sync)
+      window.removeEventListener("hashchange", sync)
+    }
+  }, [])
+
+  return hash
+}
