@@ -33,4 +33,18 @@
   .flip-stage {
     perspective: 1200px;
   }
+
+  .preview-stage {
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  .preview-stage[data-tone="dark"] {
+    background-color: theme("colors.brand.blue");
+    color: theme("colors.white");
+  }
+
+  .preview-stage[data-tone="light"] {
+    background-color: theme("colors.preview");
+    color: theme("colors.brand.blue");
+  }
 }

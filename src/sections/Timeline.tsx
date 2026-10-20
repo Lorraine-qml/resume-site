@@ -1,62 +1,94 @@
 import { motion } from "framer-motion"
+import { ArrowRight, BarChart3, Code2, Rocket, type LucideIcon } from "lucide-react"
 import { SectionHeading } from "../components/ui/SectionHeading"
-import { milestones } from "../data/content"
+import { careerPath, careerStages, type CareerAccent, type CareerIcon } from "../data/content"
 
 interface TimelineProps {
   id?: string
 }
 
-const nodeClassName = {
-  gold: "bg-brand-gold",
+const accentTop: Record<CareerAccent, string> = {
+  quiet: "bg-line",
   blue: "bg-brand-blue",
-  quiet: "border-2 border-brand-blue bg-white",
-} as const
+  gold: "bg-brand-gold",
+}
 
-const ringClassName = {
-  gold: "border-brand-gold",
-  blue: "border-brand-blue",
-  quiet: "border-brand-blue/40",
-} as const
+const accentQuote: Record<CareerAccent, string> = {
+  quiet: "border-line",
+  blue: "border-brand-blue/40",
+  gold: "border-brand-gold/50",
+}
+
+const icons: Record<CareerIcon, LucideIcon> = {
+  code: Code2,
+  chart: BarChart3,
+  rocket: Rocket,
+}
 
 export function Timeline({ id = "timeline" }: TimelineProps) {
   return (
-    <section id={id} className="scroll-mt-20 bg-surface px-6 py-14 md:py-16">
-      <div className="mx-auto max-w-6xl">
-        <SectionHeading
-          kicker="职业路径"
-          title="从学校到产品落地"
-          description="太原科技大学，开润软件的项目交付，禹创数维的产品与 AI。"
-        />
-        <ol className="relative mt-8 max-w-3xl space-y-8 border-l border-brand-blue/15 pl-10">
-          {milestones.map((item, index) => (
-            <li key={item.id} className="relative">
-              <span className="absolute -left-10 top-1.5 flex h-3.5 w-3.5 -translate-x-1/2 items-center justify-center">
-                <motion.span
-                  className={`absolute inset-0 rounded-full border ${ringClassName[item.tone]}`}
-                  initial={{ scale: 0.6, opacity: 0.7 }}
-                  whileInView={{ scale: 2.4, opacity: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.8, delay: index * 0.05 }}
-                />
-                <motion.span
-                  className={`h-3.5 w-3.5 rounded-full ${nodeClassName[item.tone]}`}
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18, delay: index * 0.05 }}
-                />
-              </span>
-              <p className="text-xs tracking-[0.18em] text-brand-blue/45">{item.period}</p>
-              <h3 className="mt-2 text-2xl font-medium tracking-tight text-brand-blue">{item.title}</h3>
-              <p className="mt-1 text-sm text-brand-blue/55">{item.org}</p>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-brand-blue/75">{item.summary}</p>
-            </li>
+    <section id={id} className="scroll-mt-20 bg-surface px-6 py-14 md:py-16 lg:px-10">
+      <div className="mx-auto w-full">
+        <SectionHeading kicker={careerPath.kicker} title={careerPath.title} />
+        <p className="mt-6 flex flex-wrap items-center gap-y-2 text-base font-medium text-brand-blue sm:text-lg md:text-xl">
+          {careerPath.steps.map((step, index) => (
+            <span key={step} className="inline-flex items-center">
+              {index > 0 ? <ArrowRight className="mx-2.5 h-4 w-4 shrink-0 text-brand-gold sm:mx-3 sm:h-5 sm:w-5" strokeWidth={2.5} /> : null}
+              <span>{step}</span>
+            </span>
           ))}
-        </ol>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <span className="rounded-full border border-brand-gold px-4 py-1.5 text-sm text-brand-gold">PMP</span>
-          <span className="rounded-full border border-brand-gold px-4 py-1.5 text-sm text-brand-gold">NPDP</span>
-        </div>
+        </p>
+
+        <ul className="mt-10 flex flex-col gap-5 lg:grid lg:grid-cols-3 lg:gap-6">
+          {careerStages.map((item, index) => {
+            const Icon = icons[item.icon]
+            return (
+              <li key={item.id}>
+                <motion.article
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-preview shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift"
+                >
+                  <span className={`block h-1 w-full transition-[box-shadow,height] duration-300 group-hover:h-1.5 ${accentTop[item.accent]}`} />
+                  <div className="flex flex-1 flex-col p-6">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[11px] tracking-[0.16em] text-muted">
+                          {item.stage}
+                          <span className="mx-1.5 text-line">·</span>
+                          {item.period}
+                        </p>
+                        <h3 className="mt-3 text-xl font-semibold tracking-tight text-brand-blue sm:text-2xl">{item.title}</h3>
+                        <p className="mt-1.5 text-sm text-muted">{item.org}</p>
+                      </div>
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card border border-line bg-white text-brand-blue/55">
+                        <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      </span>
+                    </div>
+
+                    <p className="mt-5 text-sm leading-7 text-ink">{item.summary}</p>
+
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {item.tags.map((tag) => (
+                        <li key={tag} className="rounded-full bg-white px-2.5 py-1 text-[11px] text-muted ring-1 ring-line">
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <blockquote className={`mt-5 border-l-2 pl-3 text-sm italic leading-7 text-muted ${accentQuote[item.accent]}`}>
+                      {item.insight}
+                    </blockquote>
+
+                    <p className="mt-auto pt-6 text-center text-[11px] tracking-[0.14em] text-brand-blue/45">{item.footer}</p>
+                  </div>
+                </motion.article>
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </section>
   )

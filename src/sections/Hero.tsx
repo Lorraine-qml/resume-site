@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { Button } from "../components/ui/Button"
 import { FloatTag } from "../components/ui/FloatTag"
+import { AiWorkspace } from "../components/visual/AiWorkspace"
 import {
   heroFocus,
   heroMetrics,
@@ -29,8 +30,8 @@ function HeroPortrait() {
 
 export function Hero({ id = "hero" }: HeroProps) {
   return (
-    <section id={id} className="px-6 pb-2 pt-24">
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-10">
+    <section id={id} className="px-6 pb-2 pt-24 lg:px-10">
+      <div className="mx-auto grid w-full items-center gap-12 lg:grid-cols-2 lg:gap-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -75,14 +76,15 @@ export function Hero({ id = "hero" }: HeroProps) {
               />
             ))}
           </ul>
-          <div className="relative mx-auto mt-3 w-full max-w-lg lg:mt-4">
+          <div className="relative mx-auto mt-6 w-full max-w-lg lg:mt-14">
             <ul className="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 flex-col gap-8 sm:flex">
               {heroSkills.left.map((label, index) => (
                 <FloatTag key={label} label={label} delay={0.25 + index * 0.18} />
               ))}
             </ul>
-            <div className="mx-auto w-[86%] sm:w-[68%] lg:w-[62%]">
+            <div className="relative mx-auto w-[86%] sm:w-[68%] lg:w-[62%]">
               <HeroPortrait />
+              <AiWorkspace className="absolute left-[82%] -top-8 z-20 hidden lg:block" />
             </div>
             <ul className="absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-end gap-8 sm:flex">
               {heroSkills.right.map((label, index) => (
@@ -95,7 +97,10 @@ export function Hero({ id = "hero" }: HeroProps) {
               ))}
             </ul>
           </div>
-          <p className="mt-4 text-center text-sm tracking-[0.12em] text-brand-gold">{heroFocus}</p>
+          <div className="mt-8 text-center lg:mt-10">
+            <p className="text-base font-semibold tracking-wide text-brand-blue sm:text-lg">{heroFocus.title}</p>
+            <p className="mt-1.5 text-xs leading-relaxed tracking-wide text-brand-blue/55 sm:text-sm">{heroFocus.subtitle}</p>
+          </div>
         </motion.div>
       </div>
     </section>

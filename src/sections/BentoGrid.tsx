@@ -64,10 +64,13 @@ function ProofCard({ proof }: { proof: CapabilityProof }) {
   return (
     <DataCard className="flex h-full min-h-[12.5rem] flex-col items-start px-4 py-4">
       <IconBadge icon={proof.icon} />
-      <p className="mt-3 flex h-10 items-end font-sans font-extrabold leading-none tracking-tight text-brand-gold sm:h-[2.5rem]">
-        <span className={compactFigure ? "text-[1.75rem] sm:text-[2rem]" : "text-[2rem] tabular-nums sm:text-[2.5rem]"}>
+      <p className="mt-3 flex h-10 items-baseline whitespace-nowrap font-sans leading-none tracking-tight text-brand-gold sm:h-12">
+        <span
+          className={`font-extrabold ${compactFigure ? "text-[1.75rem] sm:text-[2rem]" : "text-[2rem] tabular-nums sm:text-[2.5rem]"}`}
+        >
           {proof.figure}
         </span>
+        {proof.unit ? <span className="ml-0.5 text-lg font-semibold">{proof.unit}</span> : null}
       </p>
       <p className="mt-2 line-clamp-2 min-h-5 text-sm font-semibold leading-5 text-ink">{proof.label}</p>
       <p className="mt-1 line-clamp-3 min-h-[2.25rem] text-xs leading-normal text-muted">{proof.note}</p>
@@ -84,8 +87,8 @@ export function BentoGrid({ id = "bento" }: BentoGridProps) {
   const current = capabilities[currentIndex]
 
   return (
-    <section id={id} className="scroll-mt-20 px-6 pb-14 pt-6 md:pb-16 md:pt-8">
-      <div className="mx-auto max-w-6xl">
+    <section id={id} className="scroll-mt-20 px-6 pb-4 pt-6 md:pb-6 md:pt-8 lg:px-10">
+      <div className="mx-auto w-full">
         <SectionHeading kicker="能力图谱" title={capabilityIntro.title} />
         <p className="mt-4 text-base font-medium leading-relaxed text-brand-blue lg:whitespace-nowrap">
           {capabilityIntro.summary}

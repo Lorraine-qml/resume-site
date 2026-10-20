@@ -4,14 +4,14 @@ import { contacts, footerHeadline, footerProof, resumeFileName, resumeHref } fro
 export function Footer() {
   return (
     <footer id="contact" className="bg-brand-blue text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-14 md:py-16">
+      <div className="mx-auto flex w-full flex-col gap-5 px-6 pb-5 pt-8 md:gap-6 md:pb-6 md:pt-10 lg:px-10">
         <div className="max-w-3xl">
-          <h2 className="text-2xl font-semibold leading-snug tracking-tight md:text-4xl">
+          <h2 className="text-2xl font-semibold leading-snug tracking-tight md:text-3xl">
             {footerHeadline}
           </h2>
-          <p className="mt-4 text-sm leading-relaxed text-white/75 md:text-base">{footerProof}</p>
+          <p className="mt-2 text-sm leading-relaxed text-white/75">{footerProof}</p>
         </div>
-        <div className="flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
             {contacts.map((item) => (
               <li key={item.label}>

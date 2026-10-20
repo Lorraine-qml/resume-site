@@ -16,6 +16,7 @@ export interface CapabilityProof {
   id: string
   icon: CapabilityIcon
   figure: string
+  unit?: string
   label: string
   note: string
 }
@@ -62,13 +63,43 @@ export interface CaseStudy {
   banner?: string
 }
 
-export interface Milestone {
+export type WorkVisual = "console" | "cockpit" | "neural" | "phone"
+export type WorkColumn = "lead" | "side"
+
+export interface WorkItem {
   id: string
+  index: string
+  column: WorkColumn
+  height: "tall" | "mid"
+  tone: "light" | "dark"
+  visual: WorkVisual
+  eyebrow: string
+  title: string
+  tags: string[]
+  project: string
+  metrics: string
+  name: string
+  role: string
+  challenge: string
+  action: string
+  result: string
+}
+
+export type CareerAccent = "quiet" | "blue" | "gold"
+export type CareerIcon = "code" | "chart" | "rocket"
+
+export interface CareerStage {
+  id: string
+  stage: string
   period: string
   title: string
   org: string
   summary: string
-  tone: "gold" | "blue" | "quiet"
+  tags: string[]
+  insight: string
+  footer: string
+  accent: CareerAccent
+  icon: CareerIcon
 }
 
 export interface ContactLink {
@@ -82,7 +113,7 @@ export const heroTags = ["PMP & NPDP 双证", "太原科技大学", "现居上�
 export const footerHeadline = "让复杂业务有迹可循，让好产品如期上线。"
 
 export const footerProof =
-  "6年B端/G端经验 · 30+ 交付项目 · 3200W+ 累计成交额 · 懂技术 / 会表达 / 靠得住"
+  "6年B端/G端经验 · 50+ 交付项目 · 3200W+ 累计成交额 · 懂技术 / 会表达 / 靠得住"
 
 export interface HeroMetric {
   id: string
@@ -92,16 +123,19 @@ export interface HeroMetric {
 
 export const heroMetrics: HeroMetric[] = [
   { id: "deal", value: "3200W+", label: "产品线成交" },
-  { id: "projects", value: "30+", label: "项目落地" },
+  { id: "projects", value: "50+", label: "项目落地" },
   { id: "years", value: "6年", label: "B/G端实战" },
 ]
 
 export const heroSkills = {
-  left: ["Java 技术底座", "五层数据治理"],
-  right: ["AI 智能体闭环", "0-1 三版本演进"],
+  left: ["懂代码的 PM", "复杂业务路由器"],
+  right: ["AI 提效实践派", "Base 到 Pro 造物主"],
 }
 
-export const heroFocus = "FOCUS · 智慧园区、智慧政务、建筑数字化领域"
+export const heroFocus = {
+  title: "核心专长：复杂业务 0-1 与全生命周期交付",
+  subtitle: "经验覆盖：To G 政企/智慧园区 | To B 集团管控 | To C 多端体验",
+}
 
 export const capabilityIntro = {
   title: "全链路交付图谱",
@@ -155,14 +189,17 @@ export const capabilities: Capability[] = [
         id: "versions",
         icon: "layers",
         figure: "3",
-        label: "个核心版本",
+        unit: "个",
+        label: "核心版本",
         note: "Base → Plus → Pro。",
       },
       {
         id: "screens",
         icon: "devices",
         figure: "4",
-        label: "类终端覆盖",
+        unit: "类",
+
+        label: "终端覆盖",
         note: "PC、大屏、移动、小程序全覆盖。",
       },
       {
@@ -278,36 +315,193 @@ export const caseStudies: CaseStudy[] = [
   },
 ]
 
-export const milestones: Milestone[] = [
+export type MiniVisualKind = "chart" | "ui" | "node" | "phone"
+
+export interface MiniFrame {
+  label: string
+  image: string
+}
+
+export interface MiniCard {
+  id: "cockpit" | "console" | "neural" | "mobile"
+  index: string
+  tag: string
+  title: string
+  visual: MiniVisualKind
+  scenes: string[]
+  frames?: MiniFrame[]
+}
+
+export const miniCards: MiniCard[] = [
   {
-    id: "school",
-    period: "2016 – 2020",
-    title: "计算机科学与技术 · 本科",
-    org: "太原科技大学",
-    summary: "专业起点。后来和研发对话、做数据与权限，都从这里接上。",
-    tone: "quiet",
+    id: "cockpit",
+    index: "01",
+    tag: "[To G] 宏观决策",
+    title: "数据可视化驾驶舱",
+    visual: "chart",
+    scenes: ["智慧园区", "智慧政务", "智慧工厂", "智慧园林", "智慧交通", "其他"],
+    frames: [
+      { label: "智慧园区", image: "/works/park-01-overview.jpg" },
+      { label: "智慧政务", image: "/works/gov-01-overview.jpg" },
+      { label: "智慧工厂", image: "/works/factory-05-overview.jpg" },
+      { label: "智慧园林", image: "/works/garden-01-botanic.jpg" },
+      { label: "智慧交通", image: "/works/traffic-01-station.jpg" },
+      { label: "其他", image: "/works/other-01-biobank.jpg" },
+    ],
   },
   {
-    id: "pm",
-    period: "2020 – 2023",
-    title: "项目交付 · 两年半",
-    org: "上海开润软件",
-    summary: "项目经理。打通售前、售中、售后，并行项目放在同一条交付链上。",
-    tone: "gold",
+    id: "console",
+    index: "02",
+    tag: "[To B] 核心架构",
+    title: "中台业务管理",
+    visual: "ui",
+    scenes: ["复杂业务抽象", "零代码配置", "全链路交付", "定制转标准"],
   },
   {
-    id: "owner",
-    period: "2023 – 至今",
-    title: "产品与 AI 落地",
-    org: "上海禹创数维",
-    summary: "产品经理 / 负责人。禹翼三版本、临港数据中台、闵行数字孪生在这一段做成结果。",
-    tone: "blue",
+    id: "neural",
+    index: "03",
+    tag: "[Tech] 底层逻辑",
+    title: "数据与 AI 底座",
+    visual: "node",
+    scenes: ["五层数据架构", "RAG 智能问答", "Agent 编排"],
+  },
+  {
+    id: "mobile",
+    index: "04",
+    tag: "[To C/一线] 轻量协同",
+    title: "移动端与触达",
+    visual: "phone",
+    scenes: ["访客闭环", "一码通", "多端同源"],
   },
 ]
 
-export const prdHref = ""
+export const works: WorkItem[] = [
+  {
+    id: "cockpit",
+    index: "01",
+    column: "lead",
+    height: "mid",
+    tone: "dark",
+    visual: "cockpit",
+    eyebrow: "[To G] 宏观决策支持",
+    title: "数据可视化驾驶舱",
+    tags: ["五级空间下钻", "BIM/三维实景融合", "跨板块数据打通"],
+    project: "临港投控「一图观全域」 / 闵行数字孪生",
+    metrics: "对接单位/系统 10+  |  覆盖面积 17km²",
+    name: "数据可视化驾驶舱",
+    role: "产品经理 · 项目经理 / 产品设计",
+    challenge: "10+ 业务系统数据孤岛，17 平方公里、160+ 幢建筑还要落到同一张图。",
+    action: "构建一图一表一库，打通 ERP、公交、财务。融合正射影像和 360 全景，设计五级空间下钻，对接 6+ 家政务单位。",
+    result: "集团级数据中台，闵行区数字化转型标杆。对接单位/系统 10+，覆盖面积 17km²。",
+  },
+  {
+    id: "console",
+    index: "02",
+    column: "lead",
+    height: "tall",
+    tone: "light",
+    visual: "console",
+    eyebrow: "[To B] 核心系统架构",
+    title: "中台业务管理",
+    tags: ["复杂业务抽象", "零代码表单配置", "定制转标准"],
+    project: "禹翼平台 (Base → Pro 业务中台)",
+    metrics: "定制化开发量 ↓ 70%  |  支撑项目 30+",
+    name: "禹翼数字管理平台",
+    role: "产品负责人（从 0 到 1）",
+    challenge: "模型与数据两张皮，定制开发重。",
+    action: "三阶演进：底座、中台、AI。结合 BIM 五级下钻，落地大模型 RAG。",
+    result: "开发量下降 70%，累计成交 3200W+。",
+  },
+  {
+    id: "neural",
+    index: "03",
+    column: "side",
+    height: "mid",
+    tone: "light",
+    visual: "neural",
+    eyebrow: "[Tech] 底层治理与智能",
+    title: "数据与 AI 底座",
+    tags: ["五层数据架构", "RAG 智能问答", "Agent 编排"],
+    project: "禹翼 AI 智能体 / 数据中台",
+    metrics: "工单处理效率 ↑ 40%  |  人工成本 ↓ 60%",
+    name: "数据治理与 AI 落地",
+    role: "产品负责人",
+    challenge: "数据散在项目里，问答和派单还靠人肉转述。",
+    action: "五层数据架构托住中台。RAG 智能问答和 Agent 编排，把意图接到工单。",
+    result: "工单处理效率提升 40%，人工成本下降 60%。",
+  },
+  {
+    id: "mobile",
+    index: "04",
+    column: "side",
+    height: "tall",
+    tone: "light",
+    visual: "phone",
+    eyebrow: "[To C / 一线] 轻量协同与触达",
+    title: "移动端与现场触达",
+    tags: ["访客闭环", "一码通", "多端同源"],
+    project: "微应用端 | 园区访客与综合服务",
+    metrics: "100% 数据同源  |  响应提速 50%  |  0 纸质登记",
+    name: "园区访客与综合服务",
+    role: "产品负责人 / 交互设计主导。独立完成移动端需求调研、信息架构、UI/UE 规范，并协同前后端与中台完成交付。",
+    challenge: "访客要扫码即过，审批和权限却不能松；手机上的访客和工单还要实时回到大屏和中台。",
+    action: "做成登记、邀约、审批、通行码、门禁核销的闭环，并用一码通收拢停车、会议和健身等高频服务。",
+    result: "替代纸质登记，访客通行效率提升 80%，手机、中台与大屏保持同一套数据。",
+  },
+]
+
+export const careerPath = {
+  kicker: "职业路径",
+  title: "从技术走向经营的上升曲线",
+  steps: ["Java 开发工程师", "项目经理", "产品负责人"],
+}
+
+export const careerStages: CareerStage[] = [
+  {
+    id: "tech",
+    stage: "技术期",
+    period: "2020.07 – 2021.01",
+    title: "Java 开发工程师",
+    org: "上海开澜软件 · 半年",
+    summary: "写代码、啃底层，建立坚实的技术底座与研发沟通能力；为后续做产品打下「可落地」的判断力。",
+    tags: ["Java", "数据库", "BIM/GIS/IoT"],
+    insight: "懂代码的好处：能判断研发说的「做不了」，是真做不了，还是没想清楚。",
+    footer: "技术底座",
+    accent: "quiet",
+    icon: "code",
+  },
+  {
+    id: "project",
+    stage: "项目期",
+    period: "2021.01 – 2023.09",
+    title: "项目经理 / 初级产品经理",
+    org: "上海开澜软件 · 两年半",
+    summary: "独立对接政务客户，完成方案汇报、需求确认与验收；服务市大数据中心、水务局、闵行科委等政企客户。",
+    tags: ["政务客户", "方案汇报", "范围确认", "PMP"],
+    insight: "最多同时推进 4 个政务项目，从科委到处局，汇报对象一路升级。",
+    footer: "打通 售前 → 售中 → 售后",
+    accent: "blue",
+    icon: "chart",
+  },
+  {
+    id: "product",
+    stage: "产品期",
+    period: "2023.09 – 至今",
+    title: "产品负责人 / 产品经理",
+    org: "上海禹创数维 · 核心产品线",
+    summary: "全权负责核心产品线 0→1 与三版本演进；不只做产品规划，更统筹研发进度、需求管理与上线后运营跟踪。",
+    tags: ["0→1", "三版本演进", "AI 落地", "NPDP"],
+    insight: "从需求池到版本节奏，从交付排期到客户续约，整条链路自己盯。",
+    footer: "主导 产研运一体化",
+    accent: "gold",
+    icon: "rocket",
+  },
+]
+
 export const resumeHref = "/resume.pdf"
 export const resumeFileName = "乔美玲-产品经理-6年经验.pdf"
+
+export const ownerName = "乔美玲"
 
 export const contacts: ContactLink[] = [
   { label: "电话", value: "16601745267", href: "tel:16601745267" },
@@ -316,6 +510,7 @@ export const contacts: ContactLink[] = [
 
 export const wechatProfile = {
   name: "Lorraine",
+  wechatId: "qml537199",
   region: "冰岛",
   avatar: "/avatar-v2.jpg",
   qr: "/wechat-qr.jpg",

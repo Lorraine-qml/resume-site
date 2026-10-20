@@ -1,8 +1,4 @@
-import { Fragment } from "react"
-import { SectionHeading } from "../components/ui/SectionHeading"
-import { caseStudies } from "../data/content"
-import { PrdSection } from "./PrdSection"
-import { ProjectCase } from "./ProjectCase"
+import { WorkSandbox } from "../components/works/WorkSandbox"
 
 interface PortfolioProps {
   id?: string
@@ -10,20 +6,17 @@ interface PortfolioProps {
 
 export function Portfolio({ id = "portfolio" }: PortfolioProps) {
   return (
-    <section id={id} className="scroll-mt-20">
-      <div className="mx-auto max-w-6xl bg-white px-6 pb-2 pt-20">
-        <SectionHeading
-          kicker="作品矩阵"
-          title="三件可以对着结果看的事"
-          description="禹翼、临港投控、闵行数字孪生。图文直接展开，不离开本页。"
-        />
+    <section id={id} className="scroll-mt-20 bg-white">
+      <div className="mx-auto w-full px-6 pb-8 pt-8 md:pt-10 lg:px-10">
+        <p className="text-xs tracking-[0.22em] text-muted">作品矩阵 / Works</p>
+        <h2 className="mt-4 text-3xl font-semibold tracking-tight text-brand-blue md:text-4xl">全链路业务落地图谱</h2>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
+          不讲空话，只展示能跑通业务闭环的架构与代码。
+        </p>
       </div>
-      {caseStudies.map((study, index) => (
-        <Fragment key={study.id}>
-          <ProjectCase study={study} reversed={index % 2 === 1} surface={index !== 2} />
-          {index === 0 ? <PrdSection /> : null}
-        </Fragment>
-      ))}
+      <div className="mt-10">
+        <WorkSandbox />
+      </div>
     </section>
   )
 }
