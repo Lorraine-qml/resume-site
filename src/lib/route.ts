@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 
-function scrollToHash(hash: string, attempts = 8) {
+const HOME_SECTIONS = new Set(["bento", "portfolio", "architecture", "timeline"])
+
+function scrollToDomId(id: string, attempts = 8) {
   const tryScroll = (left: number) => {
-    const node = document.querySelector(hash)
+    const node = document.getElementById(id)
     if (node) {
       node.scrollIntoView({ behavior: "smooth", block: "start" })
       return
@@ -13,27 +15,68 @@ function scrollToHash(hash: string, attempts = 8) {
   window.requestAnimationFrame(() => tryScroll(attempts))
 }
 
+/**
+ * Read the app path from location.hash (HashRouter-style).
+ * `#/works/cockpit` → `/works/cockpit`
+ * `#/portfolio` → `/portfolio`
+ * `#/` or empty → `/`
+ * Legacy `#portfolio` → `/portfolio`
+ */
+export function getPathname(): string {
+  const raw = window.location.hash.replace(/^#/, "").trim()
+  if (!raw || raw === "/") return "/"
+  const path = (raw.startsWith("/") ? raw : `/${raw}`).split("?")[0] || "/"
+  return path.replace(/\/+$/, "") || "/"
+}
+
+function toHash(path: string): string {
+  const clean = path.startsWith("/") ? path : `/${path}`
+  if (clean === "/") return "#/"
+  return `#${clean}`
+}
+
+/**
+ * Navigate using hash routes for static hosting (Cloudflare drag-drop, etc.).
+ * Accepts `/works/id`, `/portfolio`, `/`, or legacy `/#portfolio`.
+ */
 export function navigate(to: string) {
   const url = new URL(to, window.location.origin)
-  const next = `${url.pathname}${url.search}${url.hash}`
-  const current = `${window.location.pathname}${window.location.search}${window.location.hash}`
-  if (next !== current) window.history.pushState({}, "", next)
-  window.dispatchEvent(new PopStateEvent("popstate"))
-  if (url.hash) {
-    // Wait for Home to mount when leaving /works/* → /#section
-    scrollToHash(url.hash)
+  let path = url.pathname || "/"
+
+  // Legacy `/#section` → treat as home section route
+  if (url.hash && (path === "/" || path === "")) {
+    const section = url.hash.replace(/^#/, "").replace(/^\//, "")
+    path = section ? `/${section}` : "/"
+  }
+
+  if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1)
+
+  const nextHash = toHash(path)
+  if (window.location.hash !== nextHash) {
+    window.location.hash = nextHash
+  } else {
+    window.dispatchEvent(new HashChangeEvent("hashchange"))
+  }
+
+  const first = path.replace(/^\//, "").split("/")[0] || ""
+  if (HOME_SECTIONS.has(first)) {
+    scrollToDomId(first)
   } else {
     window.scrollTo(0, 0)
   }
 }
 
 export function usePathname() {
-  const [path, setPath] = useState(() => window.location.pathname)
+  const [path, setPath] = useState(() => getPathname())
 
   useEffect(() => {
-    const sync = () => setPath(window.location.pathname)
+    const sync = () => setPath(getPathname())
+    window.addEventListener("hashchange", sync)
     window.addEventListener("popstate", sync)
-    return () => window.removeEventListener("popstate", sync)
+    return () => {
+      window.removeEventListener("hashchange", sync)
+      window.removeEventListener("popstate", sync)
+    }
   }, [])
 
   return path
@@ -54,3 +97,11 @@ export function useHash() {
 
   return hash
 }
+
+export function isHomePath(path: string): boolean {
+  if (path === "/") return true
+  const first = path.replace(/^\//, "").split("/")[0] || ""
+  return HOME_SECTIONS.has(first)
+}
+
+export { HOME_SECTIONS }

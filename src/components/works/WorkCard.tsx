@@ -12,7 +12,7 @@ export function WorkCard({ work }: WorkCardProps) {
 
   return (
     <a
-      href={`/works/${work.id}`}
+      href={`#/works/${work.id}`}
       onClick={(event) => {
         event.preventDefault()
         navigate(`/works/${work.id}`)

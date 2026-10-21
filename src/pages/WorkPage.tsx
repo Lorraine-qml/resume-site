@@ -28,10 +28,10 @@ function Crumb({ work }: { work: WorkItem }) {
     <div className="flex flex-wrap items-center justify-between gap-3">
       <p className="text-xs tracking-wide text-muted">
         <a
-          href="/#portfolio"
+          href="#/portfolio"
           onClick={(event) => {
             event.preventDefault()
-            navigate("/#portfolio")
+            navigate("/portfolio")
           }}
           className="relative font-semibold text-brand-blue after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-brand-gold"
         >
@@ -41,10 +41,10 @@ function Crumb({ work }: { work: WorkItem }) {
         <span className="font-medium text-brand-blue">{work.title}</span>
       </p>
       <a
-        href="/#portfolio"
+        href="#/portfolio"
         onClick={(event) => {
           event.preventDefault()
-          navigate("/#portfolio")
+          navigate("/portfolio")
         }}
         className="inline-flex items-center gap-1 text-xs text-muted transition-colors hover:text-brand-gold"
       >
@@ -63,7 +63,7 @@ function NextWork({ work }: { work: WorkItem }) {
     <div className="mt-16 rounded-2xl border border-line bg-white px-6 py-8 shadow-soft sm:px-8">
       {next ? (
         <a
-          href={`/works/${next.id}`}
+          href={`#/works/${next.id}`}
           onClick={(event) => {
             event.preventDefault()
             navigate(`/works/${next.id}`)
@@ -85,10 +85,10 @@ function NextWork({ work }: { work: WorkItem }) {
         </a>
       ) : (
         <a
-          href="/#portfolio"
+          href="#/portfolio"
           onClick={(event) => {
             event.preventDefault()
-            navigate("/#portfolio")
+            navigate("/portfolio")
           }}
           className="inline-flex items-center gap-1 text-sm text-brand-blue hover:text-brand-gold"
         >
@@ -398,10 +398,10 @@ export function MissingWork() {
       <div className="mx-auto max-w-xl">
         <h1 className="text-2xl font-semibold text-brand-blue">没有找到这个作品</h1>
         <a
-          href="/#portfolio"
+          href="#/portfolio"
           onClick={(event) => {
             event.preventDefault()
-            navigate("/#portfolio")
+            navigate("/portfolio")
           }}
           className="mt-6 inline-flex items-center gap-1 text-sm text-brand-blue hover:text-brand-gold"
         >

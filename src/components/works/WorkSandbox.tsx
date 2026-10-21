@@ -55,7 +55,7 @@ function CardShell({
 }) {
   return (
     <a
-      href={`/works/${card.id}`}
+      href={`#/works/${card.id}`}
       onClick={(event) => {
         event.preventDefault()
         navigate(`/works/${card.id}`)

@@ -47,8 +47,8 @@ export function Hero({ id = "hero" }: HeroProps) {
             ))}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="#portfolio">浏览实战作品</Button>
-            <Button variant="gold" href="#timeline">
+            <Button href="#/portfolio">浏览实战作品</Button>
+            <Button variant="gold" href="#/timeline">
               了解职业路径
             </Button>
           </div>
