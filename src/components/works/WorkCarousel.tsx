@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react"
 import type { WorkVisual as WorkVisualKind } from "../../data/content"
 import type { WorkSlide } from "../../data/workStories"
+import { publicAsset } from "../../lib/asset"
 import { WorkVisual } from "./WorkVisual"
 
 interface WorkCarouselProps {
@@ -160,7 +161,7 @@ export function WorkCarousel({
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
             {slide.image ? (
-              <img src={slide.image} alt={slide.caption} className="h-full w-full object-cover" />
+              <img src={publicAsset(slide.image)} alt={slide.caption} className="h-full w-full object-cover" />
             ) : (
               <WorkVisual
                 kind={visual}

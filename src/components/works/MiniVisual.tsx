@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import type { MiniFrame, MiniVisualKind } from "../../data/content"
+import { publicAsset } from "../../lib/asset"
 
 interface MiniVisualProps {
   kind: MiniVisualKind
@@ -25,7 +26,7 @@ function FrameReel({ frames }: { frames: MiniFrame[] }) {
       {frames.map((frame, index) => (
         <img
           key={frame.image}
-          src={frame.image}
+          src={publicAsset(frame.image)}
           alt=""
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
             index === active ? "opacity-100" : "opacity-0"

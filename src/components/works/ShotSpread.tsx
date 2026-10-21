@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Lightbulb, Palette, Rocket, TrendingUp, X, ZoomIn, type LucideIcon } from "lucide-react"
+import { publicAsset } from "../../lib/asset"
 
 export interface SpreadShot {
   id: string
@@ -17,14 +18,15 @@ export interface SpreadShot {
 }
 
 function ShotFrames({ images, active }: { images: string[]; active: number }) {
-  if (images.length < 2) {
-    return <img src={images[0]} alt="" className="h-auto w-full max-w-full" />
+  const resolved = images.map((src) => publicAsset(src))
+  if (resolved.length < 2) {
+    return <img src={resolved[0]} alt="" className="h-auto w-full max-w-full" />
   }
 
   return (
     <span className="relative block">
-      <img src={images[0]} alt="" className="h-auto w-full max-w-full opacity-0" />
-      {images.map((src, index) => (
+      <img src={resolved[0]} alt="" className="h-auto w-full max-w-full opacity-0" />
+      {resolved.map((src, index) => (
         <img
           key={src}
           src={src}
@@ -74,7 +76,7 @@ function ShotLightbox({ shot, image, onClose }: { shot: SpreadShot; image: strin
           >
             <X className="h-4 w-4" />
           </button>
-          <img src={image} alt={shot.title} className="max-h-[86vh] w-full rounded-2xl object-contain" />
+          <img src={publicAsset(image)} alt={shot.title} className="max-h-[86vh] w-full rounded-2xl object-contain" />
         </motion.div>
       </motion.div>
     </AnimatePresence>,

@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { X, ZoomIn } from "lucide-react"
 import { otherStory, type OtherCard } from "../../data/otherStory"
+import { publicAsset } from "../../lib/asset"
 import { ProjectIntro } from "./ProjectIntro"
 
 export function OtherCase() {
@@ -29,7 +30,7 @@ export function OtherCase() {
               onClick={() => setOpen(card)}
               className="relative w-full overflow-hidden rounded-card shadow-soft"
             >
-              <img src={card.image} alt="" className="block h-auto w-full" />
+              <img src={publicAsset(card.image)} alt="" className="block h-auto w-full" />
               <span className="pointer-events-none absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md">
                 <ZoomIn className="h-3.5 w-3.5" />
               </span>
@@ -71,7 +72,7 @@ export function OtherCase() {
                 >
                   <X className="h-4 w-4" />
                 </button>
-                <img src={open.image} alt="" className="block w-full" />
+                <img src={publicAsset(open.image)} alt="" className="block w-full" />
               </motion.div>
             </motion.div>
           ) : null}

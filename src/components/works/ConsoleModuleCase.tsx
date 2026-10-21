@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Lightbulb, X, ZoomIn } from "lucide-react"
 import type { ConsoleFeature, ConsoleModuleStory } from "../../data/consoleStory"
+import { publicAsset } from "../../lib/asset"
 import { AssetLifecycleFlow } from "./AssetLifecycleFlow"
 
 interface ConsoleModuleCaseProps {
@@ -12,14 +13,15 @@ interface ConsoleModuleCaseProps {
 }
 
 function FeatureFrames({ images, active }: { images: string[]; active: number }) {
-  if (images.length < 2) {
-    return <img src={images[0]} alt="" className="block h-auto w-full" />
+  const resolved = images.map((src) => publicAsset(src))
+  if (resolved.length < 2) {
+    return <img src={resolved[0]} alt="" className="block h-auto w-full" />
   }
 
   return (
     <span className="relative block">
-      <img src={images[0]} alt="" className="block h-auto w-full opacity-0" />
-      {images.map((src, index) => (
+      <img src={resolved[0]} alt="" className="block h-auto w-full opacity-0" />
+      {resolved.map((src, index) => (
         <img
           key={src}
           src={src}
@@ -150,7 +152,11 @@ function FeatureBlock({ feature, flip }: { feature: ConsoleFeature; flip: boolea
                   >
                     <X className="h-4 w-4" />
                   </button>
-                  <img src={currentImage} alt={feature.title} className="max-h-[86vh] w-full rounded-2xl object-contain" />
+                  <img
+                    src={publicAsset(currentImage)}
+                    alt={feature.title}
+                    className="max-h-[86vh] w-full rounded-2xl object-contain"
+                  />
                 </motion.div>
               </motion.div>
             </AnimatePresence>,

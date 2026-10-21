@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Play, X, ZoomIn } from "lucide-react"
 import type { WorkVisual as WorkVisualKind } from "../../data/content"
+import { publicAsset } from "../../lib/asset"
 import { WorkVisual } from "./WorkVisual"
 
 interface FilmStageProps {
@@ -17,6 +18,8 @@ interface FilmStageProps {
 export function FilmStage({ title, badge, visual, scene, src, href }: FilmStageProps) {
   const [open, setOpen] = useState(false)
   const inlineRef = useRef<HTMLVideoElement>(null)
+  const mediaSrc = src ? publicAsset(src) : undefined
+  const mediaHref = href ? publicAsset(href) : undefined
 
   useEffect(() => {
     if (!open) return
@@ -39,9 +42,9 @@ export function FilmStage({ title, badge, visual, scene, src, href }: FilmStageP
 
   return (
     <>
-      {href ? (
+      {mediaHref ? (
         <div className="relative aspect-video w-full overflow-hidden rounded-card bg-brand-blue shadow-soft">
-          <iframe className="h-full w-full" src={href} title={title} allow="autoplay; fullscreen" allowFullScreen />
+          <iframe className="h-full w-full" src={mediaHref} title={title} allow="autoplay; fullscreen" allowFullScreen />
           <button
             type="button"
             aria-label={`放大查看${title}`}
@@ -51,12 +54,12 @@ export function FilmStage({ title, badge, visual, scene, src, href }: FilmStageP
             <ZoomIn className="h-3.5 w-3.5" />
           </button>
         </div>
-      ) : src ? (
+      ) : mediaSrc ? (
         <div className="relative w-full overflow-hidden rounded-card shadow-soft">
           <video
             ref={inlineRef}
             className="block w-full"
-            src={src}
+            src={mediaSrc}
             controls
             autoPlay
             loop
@@ -118,18 +121,18 @@ export function FilmStage({ title, badge, visual, scene, src, href }: FilmStageP
                   <X className="h-4 w-4" />
                 </button>
                 <div className="relative text-white">
-                  {href ? (
+                  {mediaHref ? (
                     <iframe
                       className="aspect-video w-full"
-                      src={href}
+                      src={mediaHref}
                       title={title}
                       allow="autoplay; fullscreen"
                       allowFullScreen
                     />
-                  ) : src ? (
+                  ) : mediaSrc ? (
                     <video
                       className="block w-full"
-                      src={src}
+                      src={mediaSrc}
                       controls
                       autoPlay
                       loop

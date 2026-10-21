@@ -3,6 +3,7 @@ import { Button } from "../components/ui/Button"
 import { FloatTag } from "../components/ui/FloatTag"
 import { AiWorkspace } from "../components/visual/AiWorkspace"
 import { heroFocus, heroMetrics, heroSkills, heroTags } from "../data/content"
+import { publicAsset } from "../lib/asset"
 
 interface HeroProps {
   id?: string
@@ -13,7 +14,7 @@ function HeroPortrait() {
     <div className="relative overflow-hidden">
       <div className="absolute inset-x-8 bottom-4 h-10 rounded-full bg-brand-gold/30 blur-2xl" />
       <img
-        src="/hero-portrait-v2.jpg"
+        src={publicAsset("/hero-portrait-v2.jpg")}
         alt="乔美玲在双屏工位前整理蓝图与数据看板"
         className="relative mx-auto -mb-[14%] -mt-[20%] w-full"
       />

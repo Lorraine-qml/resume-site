@@ -521,6 +521,7 @@ export const careerStages: CareerStage[] = [
   },
 ]
 
+/** Public files — keep leading slash; `publicAsset()` resolves base at render time. */
 export const resumeHref = "/resume.pdf"
 export const resumeFileName = "乔美玲-产品经理-6年经验.pdf"
 

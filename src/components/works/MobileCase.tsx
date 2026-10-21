@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { X, ZoomIn } from "lucide-react"
 import { mobileStory, type MobileShot } from "../../data/mobileStory"
+import { publicAsset } from "../../lib/asset"
 import { UnifiedTag } from "../ui/UnifiedTag"
 import { PlatformAppSwitch } from "./PlatformAppSwitch"
 
@@ -30,7 +31,7 @@ function PhoneFrame({ shot, className = "w-full" }: PhoneFrameProps) {
             <span className="absolute right-2.5 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-device-gloss/80" />
           </span>
           <img
-            src={shot.image}
+            src={publicAsset(shot.image)}
             alt=""
             className="absolute inset-0 h-full w-full object-cover object-top"
           />

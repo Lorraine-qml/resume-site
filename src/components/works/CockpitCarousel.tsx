@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react"
 import { motion } from "framer-motion"
 import type { MiniFrame } from "../../data/content"
+import { publicAsset } from "../../lib/asset"
 
 interface CockpitCarouselProps {
   frames: MiniFrame[]
@@ -85,7 +86,7 @@ export function CockpitCarousel({
         {frames.map((frame) => (
           <div key={frame.image} className="h-full w-full shrink-0">
             <img
-              src={frame.image}
+              src={publicAsset(frame.image)}
               alt={frame.label}
               draggable={false}
               className="pointer-events-none h-full w-full object-cover object-top"

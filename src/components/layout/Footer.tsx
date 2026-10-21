@@ -5,6 +5,7 @@ import {
   footerProof,
   wechatProfile,
 } from "../../data/content"
+import { publicAsset } from "../../lib/asset"
 
 export function Footer() {
   return (
@@ -51,7 +52,7 @@ export function Footer() {
             <div className="flex items-center gap-4">
               <div className="h-[4.75rem] w-[4.75rem] shrink-0 overflow-hidden rounded-lg bg-white p-1 shadow-float">
                 <img
-                  src={wechatProfile.qr}
+                  src={publicAsset(wechatProfile.qr)}
                   alt="微信二维码"
                   className="h-full w-full rounded-md object-cover object-center"
                 />

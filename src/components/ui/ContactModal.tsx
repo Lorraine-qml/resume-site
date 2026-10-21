@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Check, Copy, X } from "lucide-react"
 import { contacts, ownerName, wechatProfile } from "../../data/content"
+import { publicAsset } from "../../lib/asset"
 
 interface ContactModalProps {
   open: boolean
@@ -183,7 +184,7 @@ export function ContactModal({ open, onClose }: ContactModalProps) {
                 <QrScannerFrame>
                   <div className="mx-auto h-[7.25rem] w-[7.25rem] overflow-hidden rounded-md bg-white">
                     <img
-                      src={wechatProfile.qr}
+                      src={publicAsset(wechatProfile.qr)}
                       alt="微信二维码"
                       className="h-full w-full object-cover object-center"
                     />

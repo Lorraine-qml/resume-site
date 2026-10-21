@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react"
+import { publicAsset } from "../../lib/asset"
 import { AvatarBubble } from "../ui/AvatarBubble"
 import { ContactModal } from "../ui/ContactModal"
 
@@ -10,7 +11,7 @@ export function ContactWidget() {
     <>
       <div className="fixed right-[30px] top-1/2 z-50 -translate-y-1/2">
         <AvatarBubble
-          src="/avatar-v2.jpg"
+          src={publicAsset("/avatar-v2.jpg")}
           onAvatarClick={() => setOpen(true)}
           avatarLabel="找我聊聊"
         />

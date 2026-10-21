@@ -22,6 +22,7 @@ import {
   type ArchLayer,
   type ArchNode,
 } from "../data/architecture"
+import { publicAsset } from "../lib/asset"
 
 interface AiArchitectureProps {
   id?: string
@@ -328,7 +329,7 @@ function ArchitectPortrait() {
       />
 
       <img
-        src="/arch-pm-illustration.jpg"
+        src={publicAsset("/arch-pm-illustration.jpg")}
         alt="AI 赋能产品架构师形象"
         className="relative z-[10] h-full w-auto max-w-[52%] -scale-x-100 object-contain object-bottom"
       />

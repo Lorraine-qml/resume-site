@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type MouseEvent } from "react"
 import { Menu, MessageCircle, X } from "lucide-react"
 import { resumeFileName, resumeHref } from "../../data/content"
+import { publicAsset } from "../../lib/asset"
 import { navigate, usePathname } from "../../lib/route"
 import { ContactModal } from "../ui/ContactModal"
 
@@ -174,7 +175,7 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
           </ul>
           <div className="ml-12 flex items-center gap-3">
             <a
-              href={resumeHref}
+              href={publicAsset(resumeHref)}
               download={resumeFileName}
               className="rounded-card border border-brand-blue/15 bg-white px-4 py-2 text-sm text-brand-blue transition-colors hover:border-brand-gold"
             >
@@ -223,7 +224,7 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
             })}
             <li>
               <a
-                href={resumeHref}
+                href={publicAsset(resumeHref)}
                 download={resumeFileName}
                 onClick={close}
                 className="inline-flex rounded-card border border-brand-blue/15 bg-white px-4 py-2 text-base text-brand-blue"
