@@ -1,7 +1,6 @@
 import { Lightbulb, Rocket } from "lucide-react"
 import { parkShots } from "../../data/parkStory"
 import { cockpitStory } from "../../data/workStories"
-import { publicAsset } from "../../lib/asset"
 import { FilmStage } from "./FilmStage"
 import { ProjectIntro } from "./ProjectIntro"
 import { ShotSpread } from "./ShotSpread"
@@ -20,7 +19,7 @@ export function ParkCase() {
             badge="模型漫游"
             visual="cockpit"
             scene={0}
-            src={publicAsset("/works/park-roam.mp4")}
+            src="/works/park-roam.mp4"
           />
         </div>
         <div className="min-w-0 lg:order-1">
