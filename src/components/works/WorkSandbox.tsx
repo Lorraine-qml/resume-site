@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, BookOpen } from "lucide-react"
 import { miniCards, type MiniCard } from "../../data/content"
 import { navigate } from "../../lib/route"
 import { UnifiedTagList } from "../ui/UnifiedTag"
@@ -9,10 +9,15 @@ import { MiniVisual } from "./MiniVisual"
 function DetailCta({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-flex items-center justify-center gap-1 rounded-lg border border-brand-gold bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-gold transition duration-300 group-hover:bg-brand-gold group-hover:text-white group-hover:shadow-cta-gold ${className}`}
+      className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md bg-brand-gold px-3.5 py-2 text-xs font-normal leading-none text-white transition duration-300 group-hover:bg-brand-gold/85 group-hover:shadow-cta-gold ${className}`}
     >
-      查看详细方案
-      <ArrowUpRight className="h-3.5 w-3.5" />
+      <BookOpen className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+      阅览设计全貌
+      <ArrowUpRight
+        className="h-3.5 w-3.5 shrink-0 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        strokeWidth={1.75}
+        aria-hidden="true"
+      />
     </span>
   )
 }
@@ -28,7 +33,7 @@ function MediaFrame({
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-xl border p-3 ${
+      className={`overflow-hidden rounded-xl border p-2.5 ${
         tone === "dark" ? "border-sea-navy bg-sea-navy" : "border-line bg-surface"
       } ${className}`}
     >
@@ -55,38 +60,46 @@ function CardShell({
         event.preventDefault()
         navigate(`/works/${card.id}`)
       }}
-      className={`group flex h-full flex-col rounded-2xl border border-line bg-white p-7 shadow-soft transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/40 hover:shadow-lift ${className}`}
+      className={`group flex h-full flex-col rounded-2xl border border-line bg-white p-5 shadow-soft transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/40 hover:shadow-lift sm:p-6 ${className}`}
     >
       <div className="flex items-center justify-between text-sm">
-        <span className="text-lg font-bold tracking-wide text-brand-blue/55">{card.index}</span>
-        <span className="text-muted">{card.tag}</span>
+        <span className="text-base font-bold tracking-wide text-brand-blue/55">{card.index}</span>
+        <span className="text-xs text-muted sm:text-sm">{card.tag}</span>
       </div>
-      <h3 className="mt-5 text-2xl font-semibold tracking-tight text-brand-blue">{card.title}</h3>
-      <p className="mt-3 text-sm leading-[1.65] text-copy">{card.summary}</p>
+      <h3 className="mt-3 text-xl font-semibold tracking-tight text-brand-blue sm:text-2xl">{card.title}</h3>
+      <p className="mt-2 line-clamp-2 text-sm leading-[1.55] text-copy">{card.summary}</p>
       {children}
     </a>
   )
 }
 
+/** 首行预览高度：压缩后首屏可露出 03 / 04 标题 */
+const topMediaHeight = "h-[140px] sm:h-[150px] lg:h-[160px]"
+const bottomMediaHeight = "h-[120px] sm:h-[130px] lg:h-[140px]"
+
 function CockpitCard({ card }: { card: MiniCard }) {
   return (
     <CardShell card={card} className="lg:col-span-7">
-      <div className="mt-6 flex min-h-0 flex-1 flex-col gap-5 lg:flex-row">
-        <MediaFrame className="min-w-0 flex-[1.2]">
+      <div className="mt-4 flex flex-1 flex-col">
+        <MediaFrame>
           {card.frames && card.frames.length > 0 ? (
-            <CockpitCarousel frames={card.frames} ariaLabel="宏观决策驾驶舱预览" />
+            <CockpitCarousel
+              frames={card.frames}
+              heightClassName={topMediaHeight}
+              ariaLabel="宏观决策驾驶舱预览"
+            />
           ) : (
-            <div className="h-[220px]">
+            <div className={topMediaHeight}>
               <MiniVisual kind={card.visual} bare />
             </div>
           )}
         </MediaFrame>
-        <div className="flex min-w-0 flex-[0.8] flex-col justify-between gap-4">
-          <div>
-            <p className="text-xs text-muted">覆盖行业</p>
-            <UnifiedTagList tags={card.scenes} className="mt-2.5" />
+        <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-3">
+          <div className="min-w-0">
+            <p className="mb-1.5 text-[10px] tracking-wide text-muted">覆盖行业</p>
+            <UnifiedTagList tags={card.scenes} />
           </div>
-          <DetailCta className="w-fit" />
+          <DetailCta />
         </div>
       </div>
     </CardShell>
@@ -94,25 +107,30 @@ function CockpitCard({ card }: { card: MiniCard }) {
 }
 
 function StackCard({ card, span }: { card: MiniCard; span: "5" | "6" }) {
+  const besideCockpit = span === "5"
+  const mediaHeight = besideCockpit ? topMediaHeight : bottomMediaHeight
+
   return (
     <CardShell card={card} className={span === "5" ? "lg:col-span-5" : "lg:col-span-6"}>
-      <MediaFrame className="mt-6">
-        {card.frames && card.frames.length > 0 ? (
-          <CockpitCarousel
-            frames={card.frames}
-            heightClassName="h-[150px]"
-            intervalMs={1000}
-            ariaLabel={`${card.title}预览`}
-          />
-        ) : (
-          <div className="h-[150px]">
-            <MiniVisual kind={card.visual} bare />
-          </div>
-        )}
-      </MediaFrame>
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
-        <UnifiedTagList tags={card.scenes} />
-        <DetailCta />
+      <div className="mt-4 flex flex-1 flex-col">
+        <MediaFrame>
+          {card.frames && card.frames.length > 0 ? (
+            <CockpitCarousel
+              frames={card.frames}
+              heightClassName={mediaHeight}
+              intervalMs={1000}
+              ariaLabel={`${card.title}预览`}
+            />
+          ) : (
+            <div className={mediaHeight}>
+              <MiniVisual kind={card.visual} bare />
+            </div>
+          )}
+        </MediaFrame>
+        <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-3">
+          <UnifiedTagList tags={card.scenes} />
+          <DetailCta />
+        </div>
       </div>
     </CardShell>
   )
@@ -125,7 +143,7 @@ export function WorkSandbox() {
   const mobile = miniCards.find((card) => card.id === "mobile")
 
   return (
-    <div className="mx-auto grid w-full max-w-[1520px] grid-cols-1 gap-6 px-6 pt-5 md:px-6 lg:grid-cols-12 lg:px-10">
+    <div className="mx-auto grid w-full max-w-[1520px] grid-cols-1 gap-4 px-6 pt-4 md:px-6 lg:grid-cols-12 lg:gap-5 lg:px-10">
       {cockpit ? <CockpitCard card={cockpit} /> : null}
       {consoleCard ? <StackCard card={consoleCard} span="5" /> : null}
       {neural ? <StackCard card={neural} span="6" /> : null}

@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, BookOpen } from "lucide-react"
 import type { WorkItem } from "../../data/content"
 import { navigate } from "../../lib/route"
 import { WorkVisual } from "./WorkVisual"
@@ -69,9 +69,14 @@ export function WorkCard({ work }: WorkCardProps) {
         <div className="mt-auto pt-6">
           <p className={`text-sm ${dark ? "text-white/75" : "text-copy"}`}>{work.project}</p>
           <p className={`mt-1.5 text-sm font-medium ${dark ? "text-brand-gold" : "text-brand-blue"}`}>{work.metrics}</p>
-          <p className="mt-4 inline-flex items-center gap-1 text-xs tracking-wide">
-            查看详细方案
-            <ArrowUpRight className="h-3.5 w-3.5 transition duration-300 group-hover:translate-x-[3px] group-hover:text-brand-gold" />
+          <p className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-xs tracking-wide">
+            <BookOpen className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+            阅览设计全貌
+            <ArrowUpRight
+              className="h-3.5 w-3.5 shrink-0 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-brand-gold"
+              strokeWidth={1.75}
+              aria-hidden="true"
+            />
           </p>
         </div>
       </div>
