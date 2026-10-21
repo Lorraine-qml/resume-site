@@ -5,8 +5,6 @@ import { ShotSpread } from "./ShotSpread"
 export function ChangxingCase() {
   return (
     <div>
-      <p className="text-xs tracking-[0.16em] text-brand-gold">{changxingStory.tags}</p>
-      <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">{changxingStory.title}</h3>
       <ProjectIntro left={changxingStory.duties[0]} right={changxingStory.duties[1]} />
       <ShotSpread
         shots={changxingStory.shots.map((shot) => ({

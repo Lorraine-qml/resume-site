@@ -19,8 +19,6 @@ export function OtherCase() {
 
   return (
     <div>
-      <p className="text-xs tracking-[0.16em] text-brand-gold">{otherStory.tags}</p>
-      <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">{otherStory.title}</h3>
       <ProjectIntro overview={otherStory.overview} highlights={otherStory.highlights} />
       <ul className="mt-14 grid gap-x-8 gap-y-12 md:grid-cols-2">
         {otherStory.cards.map((card) => (

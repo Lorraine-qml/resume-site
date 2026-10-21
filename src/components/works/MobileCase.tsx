@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { X, ZoomIn } from "lucide-react"
 import { mobileStory, type MobileShot } from "../../data/mobileStory"
 import { UnifiedTag } from "../ui/UnifiedTag"
+import { PlatformAppSwitch } from "./PlatformAppSwitch"
 
 interface PhoneFrameProps {
   shot: MobileShot
@@ -147,7 +148,18 @@ export function MobileCase() {
 
   return (
     <div className="w-full">
-      <section className="rounded-2xl bg-white px-4 py-6 shadow-soft sm:px-6 sm:py-8 lg:px-8">
+      {/* 顶部与标准化 / 中台 / 底座统一：金标 + 标题与快捷切换同一行 */}
+      <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+        <div className="min-w-0">
+          <p className="text-xs tracking-[0.16em] text-brand-gold">{mobileStory.eyebrow}</p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">
+            {mobileStory.title}
+          </h1>
+        </div>
+        <PlatformAppSwitch current="mobile" />
+      </div>
+
+      <section className="mt-5 rounded-2xl border border-line bg-white px-4 py-6 shadow-soft sm:px-6 sm:py-8 lg:px-8">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12 xl:gap-14">
           {/* Left · 45% — unified phone gallery */}
           <div className="w-full lg:w-[45%] lg:shrink-0">
@@ -156,13 +168,7 @@ export function MobileCase() {
 
           {/* Right · 55% — metrics + tagged story */}
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold tracking-[0.16em] text-brand-gold">{mobileStory.eyebrow}</p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-brand-blue md:text-4xl">
-              {mobileStory.title}
-            </h1>
-            <p className="mt-2 text-sm text-copy">{mobileStory.subtitle}</p>
-
-            <ul className="mt-7 grid grid-cols-3 gap-3">
+            <ul className="grid grid-cols-3 gap-3">
               {mobileStory.metrics.map((metric) => (
                 <li
                   key={metric.id}
@@ -174,7 +180,11 @@ export function MobileCase() {
               ))}
             </ul>
 
-            <div className="mt-9 flex flex-col gap-5">
+            <p className="mt-9 text-xl font-semibold tracking-tight text-brand-blue">
+              {mobileStory.roleCopy}
+            </p>
+
+            <div className="mt-5 flex flex-col gap-5">
               <DetailRow label="角色">
                 {mobileStory.roleTags.map((tag) => (
                   <UnifiedTag key={tag} tone="blue" dot={false}>

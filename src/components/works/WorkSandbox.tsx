@@ -125,7 +125,7 @@ export function WorkSandbox() {
   const mobile = miniCards.find((card) => card.id === "mobile")
 
   return (
-    <div className="mx-auto grid w-full max-w-[1520px] grid-cols-1 gap-6 px-6 pb-12 pt-6 md:px-6 lg:grid-cols-12 lg:px-10">
+    <div className="mx-auto grid w-full max-w-[1520px] grid-cols-1 gap-6 px-6 pt-5 md:px-6 lg:grid-cols-12 lg:px-10">
       {cockpit ? <CockpitCard card={cockpit} /> : null}
       {consoleCard ? <StackCard card={consoleCard} span="5" /> : null}
       {neural ? <StackCard card={neural} span="6" /> : null}

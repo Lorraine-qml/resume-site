@@ -1,17 +1,9 @@
-import { ArrowUpRight, Lightbulb, Rocket } from "lucide-react"
+import { Lightbulb, Rocket } from "lucide-react"
 import { parkShots } from "../../data/parkStory"
 import { cockpitStory } from "../../data/workStories"
-import { navigate } from "../../lib/route"
-import { Button } from "../ui/Button"
 import { FilmStage } from "./FilmStage"
 import { ProjectIntro } from "./ProjectIntro"
 import { ShotSpread } from "./ShotSpread"
-
-const parkProducts = [
-  { label: "业务中台", id: "console" },
-  { label: "底座后台", id: "neural" },
-  { label: "移动端应用", id: "mobile" },
-]
 
 export function ParkCase() {
   const park = cockpitStory.industries.find((item) => item.id === "park")
@@ -19,27 +11,6 @@ export function ParkCase() {
 
   return (
     <div>
-      <p className="text-xs tracking-[0.16em] text-brand-gold">{park.tags}</p>
-      <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <h3 className="text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">{park.name}</h3>
-        <div className="flex flex-wrap items-center gap-2 lg:justify-end lg:pr-20">
-          <p className="mr-1 text-[10px] tracking-[0.16em] text-brand-gold">标准化对应产品</p>
-          <ul className="flex flex-wrap gap-2">
-            {parkProducts.map((product) => (
-              <li key={product.id}>
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate(`/works/${product.id}`)}
-                  className="px-3 py-1.5 text-xs shadow-none"
-                >
-                  {product.label}
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
       <ProjectIntro left={park.duties[0]} right={park.duties[1]} />
       <article className="mt-14 grid min-w-0 items-center gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="min-w-0 lg:order-2">

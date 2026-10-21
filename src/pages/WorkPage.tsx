@@ -15,6 +15,7 @@ import { OtherCase } from "../components/works/OtherCase"
 import { TrafficCase } from "../components/works/TrafficCase"
 import { FilmStage } from "../components/works/FilmStage"
 import { ParkCase } from "../components/works/ParkCase"
+import { PlatformAppSwitch } from "../components/works/PlatformAppSwitch"
 import { WorkCarousel } from "../components/works/WorkCarousel"
 import { navigate } from "../lib/route"
 
@@ -102,8 +103,6 @@ function NextWork({ work }: { work: WorkItem }) {
 function IndustryPanel({ industry }: { industry: WorkIndustry }) {
   return (
     <div>
-      <p className="text-xs tracking-[0.16em] text-brand-gold">{industry.tags}</p>
-      <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">{industry.name}</h3>
       <ProjectIntro overview={industry.summary} highlights={industry.highlights} />
       <div className="mt-10">
         <WorkCarousel key={industry.id} slides={industry.slides} visual="cockpit" dark />
@@ -122,7 +121,7 @@ function CockpitPage({ work }: { work: WorkItem }) {
         <div
           role="tablist"
           aria-label="行业"
-          className="flex w-full gap-1 rounded-full bg-track p-1.5 max-lg:pr-20"
+          className="flex w-full gap-1 rounded-full bg-track p-1.5"
         >
           {cockpitStory.industries.map((item) => {
             const selected = item.id === industry.id
@@ -153,6 +152,16 @@ function CockpitPage({ work }: { work: WorkItem }) {
               </button>
             )
           })}
+        </div>
+        {/* 标题与快捷切换同一行，左右与上方 Tab 对齐 */}
+        <div className="mt-5 flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <div className="min-w-0">
+            <p className="text-xs tracking-[0.16em] text-brand-gold">{industry.tags}</p>
+            <h3 className="mt-2 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">
+              {industry.name}
+            </h3>
+          </div>
+          <PlatformAppSwitch current="cockpit" />
         </div>
         <div className="mt-5">
           {industry.id === "gov" ? (
@@ -272,6 +281,17 @@ function ConsolePage({ work }: { work: WorkItem }) {
           })}
         </div>
 
+        {/* 标题与快捷切换放在 Tab 下方，与驾驶舱页一致 */}
+        <div className="mt-5 flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <div className="min-w-0">
+            <p className="text-xs tracking-[0.16em] text-brand-gold">智慧园区 / 业务中台</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">
+              {work.title}
+            </h2>
+          </div>
+          <PlatformAppSwitch current="console" />
+        </div>
+
         {story ? (
           <ConsoleModuleCase story={story} />
         ) : (
@@ -291,6 +311,15 @@ function ConsolePage({ work }: { work: WorkItem }) {
 function NeuralPage({ work }: { work: WorkItem }) {
   return (
     <>
+      <div className="mb-1 flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+        <div className="min-w-0">
+          <p className="text-xs tracking-[0.16em] text-brand-gold">智慧园区 / 底座后台</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">
+            {work.title}
+          </h2>
+        </div>
+        <PlatformAppSwitch current="neural" />
+      </div>
       <ConsoleModuleCase story={neuralStory} lifecyclePlacement="before" />
       <NextWork work={work} />
     </>

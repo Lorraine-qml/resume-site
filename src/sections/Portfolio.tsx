@@ -7,12 +7,12 @@ interface PortfolioProps {
 
 export function Portfolio({ id = "portfolio" }: PortfolioProps) {
   return (
-    <section id={id} className="scroll-mt-20 bg-white">
-      <div className="mx-auto w-full px-6 pb-4 pt-8 md:pt-10 lg:px-10">
+    <section id={id} className="scroll-mt-20 bg-white pb-0 pt-8 md:pt-10">
+      <div className="mx-auto w-full px-6 lg:px-10">
         <SectionHeading
           kicker="作品矩阵 / Works"
           title="全链路业务落地图谱"
-          description="不讲空话，只展示能跑通业务闭环的架构与代码。"
+          description="从底层数据架构到宏观决策，全景展示经得起实战检验的全场景产品设计与交付能力"
         />
       </div>
       <WorkSandbox />

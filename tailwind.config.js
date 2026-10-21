@@ -7,6 +7,7 @@ export default {
         brand: {
           blue: "#003153",
           gold: "#b68f75",
+          cyan: "#00E5FF",
         },
         ink: "#1E293B",
         copy: "#475569",
@@ -14,6 +15,12 @@ export default {
         chip: "#F0F5FF",
         line: "#E2E8F0",
         mist: "#F4F6F8",
+        arch: {
+          business: "#F0F4F8",
+          soft: "#F8F9FA",
+          edge: "#EAEAEA",
+          dashed: "#C0C8D6",
+        },
         ok: "#1B8A4A",
         mac: {
           red: "#FF5F56",
@@ -60,12 +67,12 @@ export default {
       },
       boxShadow: {
         card: "0 2px 4px rgba(0, 0, 0, 0.02)",
+        bubble: "0 4px 12px rgba(0, 0, 0, 0.05)",
         soft: "0 4px 20px rgba(0, 49, 83, 0.04)",
         float: "0 8px 24px rgba(0, 49, 83, 0.08)",
         cta: "0 4px 12px rgba(0, 49, 83, 0.2)",
         "cta-gold": "0 6px 16px rgba(182, 143, 117, 0.3)",
         lift: "0 12px 32px rgba(0, 49, 83, 0.08)",
-        modal: "0 20px 60px rgba(0, 0, 0, 0.1)",
         modal: "0 28px 80px rgba(0, 49, 83, 0.08), 0 6px 20px rgba(0, 49, 83, 0.04)",
         bento: "0 20px 40px rgba(0, 0, 0, 0.08)",
         orb: "inset 0 0 48px rgba(255, 255, 255, 0.45), 0 30px 70px rgba(0, 49, 83, 0.12)",
@@ -75,8 +82,27 @@ export default {
         "gold-glow": "0 0 18px rgba(182, 143, 117, 0.28)",
         "gold-phone": "0 0 18px rgba(182, 143, 117, 0.45)",
         "gold-breathe": "0 0 0 0 rgba(182, 143, 117, 0.2)",
+        "core-glow": "0 0 28px rgba(182, 143, 117, 0.28), 0 0 0 1px rgba(182, 143, 117, 0.45)",
+        "core-glow-soft": "0 10px 40px rgba(0, 49, 83, 0.15)",
+        "core-glow-strong": "0 10px 50px rgba(182, 143, 117, 0.22)",
+        "cyan-particle": "0 0 10px rgba(0, 229, 255, 0.95)",
+        "gold-particle": "0 0 10px rgba(182, 143, 117, 0.95)",
       },
       backgroundImage: {
+        "vibe-shimmer":
+          "linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.35) 35%, rgba(182,143,117,0.55) 55%, transparent 100%)",
+        "vibe-panel":
+          "linear-gradient(105deg, rgba(0, 49, 83, 0.08) 0%, rgba(255, 255, 255, 0.96) 45%, rgba(182, 143, 117, 0.16) 100%)",
+        "vibe-sweep":
+          "linear-gradient(to right, transparent, rgba(255,255,255,0.45), transparent)",
+        "arch-grid":
+          "linear-gradient(to right, rgba(226,232,240,0.55) 1px, transparent 1px), linear-gradient(to bottom, rgba(226,232,240,0.55) 1px, transparent 1px)",
+        "arch-dots":
+          "radial-gradient(circle, rgba(209,217,230,0.9) 1px, transparent 1px)",
+        "core-radial":
+          "radial-gradient(ellipse at 50% 0%, rgba(182,143,117,0.18), transparent 58%)",
+        "hub-vertical":
+          "linear-gradient(180deg, #1a4d6e 0%, #003153 36%, #002540 50%, #003153 64%, #1a4d6e 100%)",
         "arch-glow":
           "radial-gradient(ellipse at 50% 20%, rgba(100, 255, 218, 0.12), transparent 55%)",
         "orbit-glow":
@@ -168,6 +194,52 @@ export default {
           "0%, 100%": { boxShadow: "0 0 0 0 rgba(182, 143, 117, 0.22)" },
           "70%": { boxShadow: "0 0 0 10px rgba(182, 143, 117, 0)" },
         },
+        "core-breathe": {
+          "0%": {
+            boxShadow: "0 10px 40px rgba(0, 49, 83, 0.15)",
+            borderColor: "rgba(182, 143, 117, 0.4)",
+          },
+          "100%": {
+            boxShadow: "0 10px 50px rgba(182, 143, 117, 0.22)",
+            borderColor: "rgba(182, 143, 117, 0.85)",
+          },
+        },
+        "particle-up": {
+          "0%": { bottom: "-8px", top: "auto", opacity: "0" },
+          "20%": { opacity: "1" },
+          "80%": { opacity: "1" },
+          "100%": { bottom: "100%", top: "auto", opacity: "0" },
+        },
+        "particle-down": {
+          "0%": { top: "-8px", opacity: "0" },
+          "20%": { opacity: "1" },
+          "80%": { opacity: "1" },
+          "100%": { top: "100%", opacity: "0" },
+        },
+        "vibe-flow": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "200% 50%" },
+        },
+        "vibe-sweep": {
+          "0%": { transform: "translateX(-120%)" },
+          "100%": { transform: "translateX(220%)" },
+        },
+        "icon-nudge": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-2px)" },
+        },
+        "float-soft": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        orbit: {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
+        "orbit-rev": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(-360deg)" },
+        },
       },
       animation: {
         ripple: "ripple 2s ease-out infinite",
@@ -186,6 +258,18 @@ export default {
         "flow-left-fast": "flow-left 1s linear infinite",
         "nest-rise": "nest-rise 2s ease-in-out infinite",
         breathe: "breathe 3s ease-out infinite",
+        "core-breathe": "core-breathe 4s ease-in-out infinite alternate",
+        "particle-up": "particle-up 1.5s linear infinite",
+        "particle-down": "particle-down 1.5s linear infinite",
+        "vibe-flow": "vibe-flow 3.2s linear infinite",
+        "vibe-sweep": "vibe-sweep 3s linear infinite",
+        "icon-nudge": "icon-nudge 1.4s ease-in-out infinite",
+        "float-soft": "float-soft 3s ease-in-out infinite",
+        "float-soft-rev": "float-soft 4s ease-in-out infinite reverse",
+        orbit: "orbit 22s linear infinite",
+        "orbit-slow": "orbit 32s linear infinite",
+        "orbit-rev": "orbit-rev 22s linear infinite",
+        "orbit-rev-slow": "orbit-rev 32s linear infinite",
       },
     },
   },

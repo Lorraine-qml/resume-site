@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type MouseEvent } from "react"
 import { Menu, MessageCircle, X } from "lucide-react"
 import { resumeFileName, resumeHref } from "../../data/content"
-import { navigate, useHash, usePathname } from "../../lib/route"
+import { navigate, usePathname } from "../../lib/route"
 import { ContactModal } from "../ui/ContactModal"
 
 interface NavItem {
@@ -17,19 +17,44 @@ interface NavbarProps {
 const defaultItems: NavItem[] = [
   { label: "能力图谱", href: "#bento", sectionId: "bento" },
   { label: "作品矩阵", href: "#portfolio", sectionId: "portfolio" },
+  { label: "AI 架构", href: "#architecture", sectionId: "architecture" },
   { label: "职业路径", href: "#timeline", sectionId: "timeline" },
 ]
 
+const homeScrollSections = ["bento", "portfolio", "architecture", "timeline"]
+
+function scrollToSection(sectionId: string) {
+  const node = document.getElementById(sectionId)
+  if (!node) return
+  // Align section top under fixed navbar; avoid leftover gap from previous section.
+  node.scrollIntoView({ behavior: "smooth", block: "start" })
+}
+
 function followSection(event: MouseEvent<HTMLAnchorElement>, href: string) {
   if (!href.startsWith("#")) return
-  if (window.location.pathname === "/") return
   event.preventDefault()
-  navigate(`/${href}`)
+  const sectionId = href.slice(1)
+
+  if (window.location.pathname !== "/") {
+    navigate(`/${href}`)
+    return
+  }
+
+  const next = `/${href}`
+  if (`${window.location.pathname}${window.location.hash}` !== next) {
+    window.history.pushState({}, "", next)
+    window.dispatchEvent(new PopStateEvent("popstate"))
+  }
+  scrollToSection(sectionId)
 }
 
 function goHome(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault()
   if (window.location.pathname === "/") {
+    if (window.location.hash) {
+      window.history.replaceState({}, "", window.location.pathname)
+      window.dispatchEvent(new PopStateEvent("popstate"))
+    }
     window.scrollTo({ top: 0, behavior: "smooth" })
     return
   }
@@ -52,13 +77,21 @@ function useActiveSection(sectionIds: string[], enabled: boolean) {
     if (nodes.length === 0) return
 
     const syncFromScroll = () => {
-      const marker = window.scrollY + window.innerHeight * 0.28
+      // Use viewport-relative tops — offsetTop breaks when ancestors are positioned/transformed.
+      const marker = window.innerHeight * 0.28
       let current: string | null = null
       for (const node of nodes) {
-        if (node.offsetTop <= marker) current = node.id
+        if (node.getBoundingClientRect().top <= marker) current = node.id
       }
       if (window.scrollY < 80) current = null
       setActiveId(current)
+
+      // Keep URL hash in sync with the visible section so deep links don't stick forever.
+      const nextHash = current ? `#${current}` : ""
+      if (window.location.hash !== nextHash) {
+        const url = `${window.location.pathname}${window.location.search}${nextHash}`
+        window.history.replaceState({}, "", url)
+      }
     }
 
     syncFromScroll()
@@ -83,13 +116,9 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
   const path = usePathname()
-  const hash = useHash()
   const onWorkRoute = path.startsWith("/works/")
   const onHome = path === "/"
-  const scrollActive = useActiveSection(
-    items.map((item) => item.sectionId),
-    onHome,
-  )
+  const scrollActive = useActiveSection(homeScrollSections, onHome)
 
   const close = () => setOpen(false)
   const openContact = () => {
@@ -101,7 +130,7 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
   const isItemActive = (item: NavItem) => {
     if (onWorkRoute) return item.sectionId === "portfolio"
     if (!onHome) return false
-    if (hash === `#${item.sectionId}`) return true
+    // Scroll position is the source of truth — hash alone must not lock a tab forever.
     return scrollActive === item.sectionId
   }
 
@@ -111,11 +140,13 @@ export function Navbar({ items = defaultItems }: NavbarProps) {
         <a
           href="/"
           onClick={goHome}
-          className="inline-flex items-center gap-2.5 transition-opacity duration-300 hover:opacity-70"
+          className="inline-flex items-center gap-2 transition-opacity duration-300 hover:opacity-70"
         >
-          <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-ok/50 motion-safe:animate-ping" />
-            <span className="relative h-2 w-2 rounded-full bg-ok shadow-status" />
+          <span
+            aria-hidden="true"
+            className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-blue text-[11px] font-bold tracking-tighter text-white"
+          >
+            LQ
           </span>
           <span className="inline-flex items-baseline gap-x-1.5">
             <span className="text-base font-semibold tracking-wide text-brand-blue">Lorraine Qiao</span>

@@ -108,12 +108,21 @@ export interface ContactLink {
   href: string
 }
 
-export const heroTags = ["PMP & NPDP 双证", "太原科技大学", "现居上海"]
+export const heroTags = ["PMP & NPDP 双证", "太原科技大学", "本科（计算机科学与技术）"]
 
 export const footerHeadline = "让复杂业务有迹可循，让好产品如期上线。"
 
 export const footerProof =
-  "6年B端/G端经验 · 50+ 交付项目 · 3200W+ 累计成交额 · 懂技术 / 会表达 / 靠得住"
+  "6年B端/G端经验 · 50+ 交付项目 · 3200W+ 累计成交额 · 懂技术 / 会表达 / 精交付，靠得住"
+
+export const footerIntent = {
+  title: "求职意向 / Open to",
+  primary: "产品经理",
+  edgeLabel: "兼容优势",
+  edges: ["可胜任项目经理", "可胜任售前经理"] as const,
+  qrLead: "扫码添加微信",
+  qrHint: "期待与您深度交流",
+}
 
 export interface HeroMetric {
   id: string
@@ -456,7 +465,7 @@ export const works: WorkItem[] = [
     project: "微应用端 | 园区访客与综合服务",
     metrics: "100% 数据同源  |  响应提速 50%  |  0 纸质登记",
     name: "园区访客与综合服务",
-    role: "产品负责人 / 交互设计主导。独立完成移动端需求调研、信息架构、UI/UE 规范，并协同前后端与中台完成交付。",
+    role: "产品负责人 / 交互设计主导。以「一码通」为核心底座，串联园区高频服务场景，实现从「人找服务」到「服务找人」的体验升级。独立完成移动端需求调研、信息架构、UI/UE 规范，并协同前后端与中台完成交付。",
     challenge: "访客要扫码即过，审批和权限却不能松；手机上的访客和工单还要实时回到大屏和中台。",
     action: "做成登记、邀约、审批、通行码、门禁核销的闭环，并用一码通收拢停车、会议和健身等高频服务。",
     result: "替代纸质登记，访客通行效率提升 80%，手机、中台与大屏保持同一套数据。",
@@ -464,9 +473,10 @@ export const works: WorkItem[] = [
 ]
 
 export const careerPath = {
-  kicker: "职业路径",
+  kicker: "职业路径 / Career Path",
   title: "从技术走向经营的上升曲线",
-  steps: ["Java 开发工程师", "项目经理", "产品负责人"],
+  subtitle:
+    "用代码的严谨打底，用项目的全局兜底，用产品的视野破局。不止于懂技术，更懂如何通过交付实现商业闭环。",
 }
 
 export const careerStages: CareerStage[] = [
@@ -501,7 +511,7 @@ export const careerStages: CareerStage[] = [
     stage: "产品期",
     period: "2023.09 – 至今",
     title: "产品负责人 / 产品经理",
-    org: "上海禹创数维 · 核心产品线",
+    org: "上海禹创数维 · 三年",
     summary: "全权负责核心产品线 0→1 与三版本演进；不只做产品规划，更统筹研发进度、需求管理与上线后运营跟踪。",
     tags: ["0→1", "三版本演进", "AI 落地", "NPDP"],
     insight: "从需求池到版本节奏，从交付排期到客户续约，整条链路自己盯。",

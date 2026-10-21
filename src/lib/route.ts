@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react"
 
+function scrollToHash(hash: string, attempts = 8) {
+  const tryScroll = (left: number) => {
+    const node = document.querySelector(hash)
+    if (node) {
+      node.scrollIntoView({ behavior: "smooth", block: "start" })
+      return
+    }
+    if (left <= 0) return
+    window.requestAnimationFrame(() => tryScroll(left - 1))
+  }
+  window.requestAnimationFrame(() => tryScroll(attempts))
+}
+
 export function navigate(to: string) {
   const url = new URL(to, window.location.origin)
   const next = `${url.pathname}${url.search}${url.hash}`
@@ -7,9 +20,8 @@ export function navigate(to: string) {
   if (next !== current) window.history.pushState({}, "", next)
   window.dispatchEvent(new PopStateEvent("popstate"))
   if (url.hash) {
-    window.requestAnimationFrame(() => {
-      document.querySelector(url.hash)?.scrollIntoView()
-    })
+    // Wait for Home to mount when leaving /works/* → /#section
+    scrollToHash(url.hash)
   } else {
     window.scrollTo(0, 0)
   }

@@ -8,6 +8,7 @@ import { usePathname } from "./lib/route"
 import { MissingWork, WorkPage } from "./pages/WorkPage"
 import { BentoGrid } from "./sections/BentoGrid"
 import { Hero } from "./sections/Hero"
+import { AiArchitecture } from "./sections/AiArchitecture"
 import { Portfolio } from "./sections/Portfolio"
 import { Timeline } from "./sections/Timeline"
 
@@ -17,6 +18,7 @@ function Home() {
       <Hero />
       <BentoGrid />
       <Portfolio />
+      <AiArchitecture />
       <Timeline />
     </>
   )

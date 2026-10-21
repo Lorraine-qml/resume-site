@@ -87,13 +87,13 @@ export function BentoGrid({ id = "bento" }: BentoGridProps) {
   const current = capabilities[currentIndex]
 
   return (
-    <section id={id} className="scroll-mt-20 px-6 pb-4 pt-6 md:pb-6 md:pt-8 lg:px-10">
+    <section id={id} className="scroll-mt-20 px-6 pb-0 pt-8 md:pt-10 lg:px-10">
       <div className="mx-auto w-full">
-        <SectionHeading kicker="能力图谱" title={capabilityIntro.title} />
-        <p className="mt-4 text-base font-medium leading-relaxed text-brand-blue lg:whitespace-nowrap">
+        <SectionHeading kicker="能力图谱 / Capability Map" title={capabilityIntro.title} />
+        <p className="mt-3 text-base font-medium leading-relaxed text-brand-blue lg:whitespace-nowrap">
           {capabilityIntro.summary}
         </p>
-        <div className="relative mt-8 w-full rounded-full bg-brand-blue/5 p-1.5">
+        <div className="relative mt-6 w-full rounded-full bg-brand-blue/5 p-1.5">
           <motion.div
             className="pointer-events-none absolute bottom-1.5 left-1.5 top-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-brand-blue"
             animate={{ x: `${currentIndex * 100}%` }}

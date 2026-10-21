@@ -5,8 +5,6 @@ import { ShotSpread } from "./ShotSpread"
 export function GardenCase() {
   return (
     <div>
-      <p className="text-xs tracking-[0.16em] text-brand-gold">{gardenStory.tags}</p>
-      <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-blue md:text-3xl">{gardenStory.title}</h3>
       <ProjectIntro left={gardenStory.duties[0]} right={gardenStory.duties[1]} />
       <ShotSpread
         shots={gardenStory.shots.map((shot) => ({

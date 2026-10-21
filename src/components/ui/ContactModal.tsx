@@ -190,7 +190,9 @@ export function ContactModal({ open, onClose }: ContactModalProps) {
                   </div>
                 </QrScannerFrame>
                 <p className="mt-3 text-center text-[11px] leading-relaxed tracking-wide text-brand-blue">
-                  扫码进一步了解我，期待与您深入交流。
+                  扫码进一步了解我，
+                  <br />
+                  期待与您深入交流。
                 </p>
               </div>
             </div>

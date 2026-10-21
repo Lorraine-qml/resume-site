@@ -68,13 +68,14 @@ const floorPlan: MobileShot = {
 export const mobileStory = {
   eyebrow: "[ To C / 一线 ] 轻量协同与触达",
   title: "移动现场触达",
-  subtitle: "微应用端 | 园区访客与综合服务",
   metrics: [
     { id: "same", value: "100%", label: "多端数据同源" },
     { id: "speed", value: "50%", label: "现场响应提速" },
     { id: "paper", value: "0", label: "纸质登记表" },
   ] satisfies MobileMetric[],
   roleTags: ["产品负责人", "交互设计主导"],
+  roleCopy:
+    "以「一码通」为核心底座，串联园区高频服务场景，实现从「人找服务」到「服务找人」的体验升级。",
   challengeTags: ["C端体验与B端严谨的平衡", "多端数据孤岛"],
   actionTags: ["全链路访客闭环", "园区服务超级入口", "多端数据强绑"],
   resultTags: ["通行效率提升 80%", "彻底无纸化"],
