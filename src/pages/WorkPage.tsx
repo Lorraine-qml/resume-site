@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, Printer } from "lucide-react"
 import { works, type WorkItem } from "../data/content"
 import { consoleStory } from "../data/consoleStory"
 import { neuralStory } from "../data/neuralStory"
@@ -17,10 +17,13 @@ import { FilmStage } from "../components/works/FilmStage"
 import { ParkCase } from "../components/works/ParkCase"
 import { PlatformAppSwitch } from "../components/works/PlatformAppSwitch"
 import { WorkCarousel } from "../components/works/WorkCarousel"
+import { Button } from "../components/ui/Button"
 import { navigate } from "../lib/route"
 
 interface WorkPageProps {
   work: WorkItem
+  /** PDF 导出：展开全部 Tab 内容，隐藏导航与跳转 */
+  forPrint?: boolean
 }
 
 function Crumb({ work }: { work: WorkItem }) {
@@ -40,17 +43,30 @@ function Crumb({ work }: { work: WorkItem }) {
         <span className="mx-2 text-line">/</span>
         <span className="font-medium text-brand-blue">{work.title}</span>
       </p>
-      <a
-        href="#/portfolio"
-        onClick={(event) => {
-          event.preventDefault()
-          navigate("/portfolio")
-        }}
-        className="inline-flex items-center gap-1 text-xs text-muted transition-colors hover:text-brand-gold"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        返回作品矩阵
-      </a>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          variant="ghost"
+          href={`#/pdf/works/${work.id}`}
+          onClick={() => {
+            navigate(`/pdf/works/${work.id}`)
+          }}
+          className="px-3 py-1.5 text-xs shadow-none"
+        >
+          <Printer className="h-3.5 w-3.5" aria-hidden="true" />
+          导出 PDF
+        </Button>
+        <a
+          href="#/portfolio"
+          onClick={(event) => {
+            event.preventDefault()
+            navigate("/portfolio")
+          }}
+          className="inline-flex items-center gap-1 text-xs text-muted transition-colors hover:text-brand-gold"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          返回作品矩阵
+        </a>
+      </div>
     </div>
   )
 }
@@ -100,6 +116,61 @@ function NextWork({ work }: { work: WorkItem }) {
   )
 }
 
+function IndustryCaseBody({ industry }: { industry: WorkIndustry }) {
+  if (industry.id === "gov") return <ChangxingCase />
+  if (industry.id === "factory") return <FactoryCase />
+  if (industry.id === "park") return <ParkCase />
+  if (industry.id === "garden") return <GardenCase />
+  if (industry.id === "traffic") return <TrafficCase />
+  if (industry.id === "other") return <OtherCase />
+  return <IndustryPanel industry={industry} />
+}
+
+function CockpitFilms() {
+  if (cockpitStory.films.length === 0) return null
+  return (
+    <div className="mt-10 space-y-10">
+      {cockpitStory.films.map((film) => {
+        const mediaLeft = Boolean(film.src || film.href)
+        return (
+          <article
+            key={film.id}
+            className={`grid min-w-0 items-center gap-8 ${
+              mediaLeft ? "lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]" : "lg:grid-cols-2"
+            }`}
+          >
+            {mediaLeft ? (
+              <FilmStage
+                title={film.title}
+                badge={film.badge}
+                visual={film.visual}
+                scene={film.scene}
+                src={film.src}
+                href={film.href}
+              />
+            ) : null}
+            <div className={mediaLeft ? "min-w-0 lg:pr-16" : film.align === "media-first" ? "lg:order-2" : undefined}>
+              <p className="text-[11px] tracking-[0.18em] text-brand-gold">【{film.kicker}】</p>
+              <h2 className="mt-3 text-2xl font-semibold text-brand-blue">{film.title}</h2>
+              <p className="mt-4 text-sm leading-7 text-ink">{film.body}</p>
+            </div>
+            {mediaLeft ? null : (
+              <FilmStage
+                title={film.title}
+                badge={film.badge}
+                visual={film.visual}
+                scene={film.scene}
+                src={film.src}
+                href={film.href}
+              />
+            )}
+          </article>
+        )
+      })}
+    </div>
+  )
+}
+
 function IndustryPanel({ industry }: { industry: WorkIndustry }) {
   return (
     <div>
@@ -111,9 +182,26 @@ function IndustryPanel({ industry }: { industry: WorkIndustry }) {
   )
 }
 
-function CockpitPage({ work }: { work: WorkItem }) {
+function CockpitPage({ work, forPrint = false }: { work: WorkItem; forPrint?: boolean }) {
   const [active, setActive] = useState(cockpitStory.industries[0].id)
   const industry = cockpitStory.industries.find((item) => item.id === active) ?? cockpitStory.industries[0]
+
+  if (forPrint) {
+    return (
+      <div className="flex flex-col gap-8">
+        {cockpitStory.industries.map((item) => (
+          <section key={item.id} className="break-inside-avoid rounded-2xl border border-line bg-white p-5 shadow-soft sm:p-6">
+            <p className="text-xs tracking-[0.16em] text-brand-gold">{item.tags}</p>
+            <h3 className="mt-2 text-xl font-semibold tracking-tight text-brand-blue md:text-2xl">{item.name}</h3>
+            <div className="mt-5">
+              <IndustryCaseBody industry={item} />
+            </div>
+            {item.id === "park" ? <CockpitFilms /> : null}
+          </section>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -132,7 +220,6 @@ function CockpitPage({ work }: { work: WorkItem }) {
                 role="tab"
                 aria-selected={selected}
                 onClick={() => setActive(item.id)}
-                onMouseEnter={() => setActive(item.id)}
                 className="group relative min-w-0 flex-1 rounded-full px-1 py-2.5 text-center text-xs tracking-wide sm:px-2 sm:text-sm"
               >
                 {selected ? (
@@ -153,7 +240,6 @@ function CockpitPage({ work }: { work: WorkItem }) {
             )
           })}
         </div>
-        {/* 标题与快捷切换同一行，左右与上方 Tab 对齐 */}
         <div className="mt-5 flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="min-w-0">
             <p className="text-xs tracking-[0.16em] text-brand-gold">{industry.tags}</p>
@@ -164,83 +250,52 @@ function CockpitPage({ work }: { work: WorkItem }) {
           <PlatformAppSwitch current="cockpit" />
         </div>
         <div className="mt-5">
-          {industry.id === "gov" ? (
-            <ChangxingCase />
-          ) : industry.id === "factory" ? (
-            <FactoryCase />
-          ) : industry.id === "park" ? (
-            <ParkCase />
-          ) : industry.id === "garden" ? (
-            <GardenCase />
-          ) : industry.id === "traffic" ? (
-            <TrafficCase />
-          ) : industry.id === "other" ? (
-            <OtherCase />
-          ) : (
-            <IndustryPanel industry={industry} />
-          )}
+          <IndustryCaseBody industry={industry} />
         </div>
       </div>
 
-      {industry.id === "park" && cockpitStory.films.length > 0 ? (
-        <div className="mt-16 space-y-12">
-          {cockpitStory.films.map((film) => {
-            const mediaLeft = Boolean(film.src || film.href)
-            return (
-              <article
-                key={film.id}
-                className={`grid min-w-0 items-center gap-8 ${
-                  mediaLeft ? "lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]" : "lg:grid-cols-2"
-                }`}
-              >
-                {mediaLeft ? (
-                  <FilmStage
-                    title={film.title}
-                    badge={film.badge}
-                    visual={film.visual}
-                    scene={film.scene}
-                    src={film.src}
-                    href={film.href}
-                  />
-                ) : null}
-                <div className={mediaLeft ? "min-w-0 lg:pr-16" : film.align === "media-first" ? "lg:order-2" : undefined}>
-                  <p className="text-[11px] tracking-[0.18em] text-brand-gold">【{film.kicker}】</p>
-                  <h2 className="mt-3 text-2xl font-semibold text-brand-blue">{film.title}</h2>
-                  <p className="mt-4 text-sm leading-7 text-ink">{film.body}</p>
-                </div>
-                {mediaLeft ? null : (
-                  <FilmStage
-                    title={film.title}
-                    badge={film.badge}
-                    visual={film.visual}
-                    scene={film.scene}
-                    src={film.src}
-                    href={film.href}
-                  />
-                )}
-              </article>
-            )
-          })}
-        </div>
-      ) : null}
+      {industry.id === "park" ? <CockpitFilms /> : null}
       <NextWork work={work} />
     </>
   )
 }
 
-function MobilePage({ work }: { work: WorkItem }) {
+function MobilePage({ work, forPrint = false }: { work: WorkItem; forPrint?: boolean }) {
   return (
     <>
-      <MobileCase />
-      <NextWork work={work} />
+      <MobileCase forPrint={forPrint} />
+      {forPrint ? null : <NextWork work={work} />}
     </>
   )
 }
 
-function ConsolePage({ work }: { work: WorkItem }) {
+function ConsolePage({ work, forPrint = false }: { work: WorkItem; forPrint?: boolean }) {
   const [active, setActive] = useState(consoleStory.modules[0].id)
   const module = consoleStory.modules.find((item) => item.id === active) ?? consoleStory.modules[0]
   const story = consoleStory.stories[module.id]
+
+  if (forPrint) {
+    return (
+      <div className="flex flex-col gap-8">
+        {consoleStory.modules.map((item) => {
+          const moduleStory = consoleStory.stories[item.id]
+          return (
+            <section key={item.id} className="break-inside-avoid rounded-2xl border border-line bg-white p-5 shadow-soft sm:p-6">
+              <p className="text-xs tracking-[0.16em] text-brand-gold">智慧园区 / 业务中台</p>
+              <h3 className="mt-2 text-xl font-semibold tracking-tight text-brand-blue md:text-2xl">{item.label}</h3>
+              {moduleStory ? (
+                <div className="mt-5">
+                  <ConsoleModuleCase story={moduleStory} />
+                </div>
+              ) : (
+                <p className="mt-3 text-sm leading-[1.75] text-muted">模块详情内容待补充。</p>
+              )}
+            </section>
+          )
+        })}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -259,7 +314,6 @@ function ConsolePage({ work }: { work: WorkItem }) {
                 role="tab"
                 aria-selected={selected}
                 onClick={() => setActive(item.id)}
-                onMouseEnter={() => setActive(item.id)}
                 className="group relative min-w-0 flex-1 rounded-full px-1 py-3 text-center text-xs tracking-wide sm:px-2 sm:text-sm"
               >
                 {selected ? (
@@ -281,7 +335,6 @@ function ConsolePage({ work }: { work: WorkItem }) {
           })}
         </div>
 
-        {/* 标题与快捷切换放在 Tab 下方，与驾驶舱页一致 */}
         <div className="mt-5 flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="min-w-0">
             <p className="text-xs tracking-[0.16em] text-brand-gold">智慧园区 / 业务中台</p>
@@ -308,7 +361,7 @@ function ConsolePage({ work }: { work: WorkItem }) {
   )
 }
 
-function NeuralPage({ work }: { work: WorkItem }) {
+function NeuralPage({ work, forPrint = false }: { work: WorkItem; forPrint?: boolean }) {
   return (
     <>
       <div className="mb-1 flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
@@ -318,15 +371,15 @@ function NeuralPage({ work }: { work: WorkItem }) {
             {work.title}
           </h2>
         </div>
-        <PlatformAppSwitch current="neural" />
+        {forPrint ? null : <PlatformAppSwitch current="neural" />}
       </div>
       <ConsoleModuleCase story={neuralStory} lifecyclePlacement="before" />
-      <NextWork work={work} />
+      {forPrint ? null : <NextWork work={work} />}
     </>
   )
 }
 
-function BriefPage({ work }: { work: WorkItem }) {
+function BriefPage({ work, forPrint = false }: { work: WorkItem; forPrint?: boolean }) {
   const slides = [
     { id: `${work.id}-a`, caption: "界面草图", scene: 0 as const },
     { id: `${work.id}-b`, caption: "结构草图", scene: 1 as const },
@@ -359,16 +412,36 @@ function BriefPage({ work }: { work: WorkItem }) {
           </div>
         </dl>
       </div>
-      <NextWork work={work} />
+      {forPrint ? null : <NextWork work={work} />}
     </>
   )
 }
 
-export function WorkPage({ work }: WorkPageProps) {
+export function WorkPage({ work, forPrint = false }: WorkPageProps) {
   useEffect(() => {
-    document.title = `${work.title} | 乔美玲`
-    window.scrollTo(0, 0)
-  }, [work.id, work.title])
+    if (!forPrint) {
+      document.title = `${work.title} | 乔美玲`
+      window.scrollTo(0, 0)
+    }
+  }, [work.id, work.title, forPrint])
+
+  if (forPrint) {
+    return (
+      <div className="w-full">
+        {work.id === "cockpit" ? (
+          <CockpitPage work={work} forPrint />
+        ) : work.id === "console" ? (
+          <ConsolePage work={work} forPrint />
+        ) : work.id === "neural" ? (
+          <NeuralPage work={work} forPrint />
+        ) : work.id === "mobile" ? (
+          <MobilePage work={work} forPrint />
+        ) : (
+          <BriefPage work={work} forPrint />
+        )}
+      </div>
+    )
+  }
 
   return (
     <article className="bg-surface px-6 pb-20 pt-20 lg:px-10">

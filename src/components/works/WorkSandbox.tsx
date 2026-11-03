@@ -9,6 +9,7 @@ import { MiniVisual } from "./MiniVisual"
 function DetailCta({ className = "" }: { className?: string }) {
   return (
     <span
+      data-pdf-hide
       className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md bg-brand-gold px-3.5 py-2 text-xs font-normal leading-none text-white transition duration-300 group-hover:bg-brand-gold/85 group-hover:shadow-cta-gold ${className}`}
     >
       <BookOpen className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />

@@ -135,7 +135,11 @@ function BlockCopy({
   )
 }
 
-export function MobileCase() {
+interface MobileCaseProps {
+  forPrint?: boolean
+}
+
+export function MobileCase({ forPrint = false }: MobileCaseProps) {
   const [open, setOpen] = useState<MobileShot | null>(null)
 
   useEffect(() => {
@@ -157,7 +161,7 @@ export function MobileCase() {
             {mobileStory.title}
           </h1>
         </div>
-        <PlatformAppSwitch current="mobile" />
+        {forPrint ? null : <PlatformAppSwitch current="mobile" />}
       </div>
 
       <section className="mt-5 rounded-2xl border border-line bg-white px-4 py-6 shadow-soft sm:px-6 sm:py-8 lg:px-8">

@@ -7,6 +7,8 @@ import { publicAsset } from "../lib/asset"
 
 interface HeroProps {
   id?: string
+  /** PDF 导出页：去掉顶栏留白与 CTA 按钮 */
+  forPrint?: boolean
 }
 
 function HeroPortrait() {
@@ -22,12 +24,15 @@ function HeroPortrait() {
   )
 }
 
-export function Hero({ id = "hero" }: HeroProps) {
+export function Hero({ id = "hero", forPrint = false }: HeroProps) {
   return (
-    <section id={id} className="px-6 pb-0 pt-24 lg:px-10">
+    <section
+      id={id}
+      className={forPrint ? "px-0 pb-0 pt-0" : "px-6 pb-0 pt-24 lg:px-10"}
+    >
       <div className="mx-auto grid w-full items-center gap-10 lg:grid-cols-2 lg:gap-10">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={forPrint ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: "easeOut" }}
         >
@@ -46,12 +51,14 @@ export function Hero({ id = "hero" }: HeroProps) {
               </span>
             ))}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="#/portfolio">浏览实战作品</Button>
-            <Button variant="gold" href="#/timeline">
-              了解职业路径
-            </Button>
-          </div>
+          {forPrint ? null : (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href="#/portfolio">浏览实战作品</Button>
+              <Button variant="gold" href="#/timeline">
+                了解职业路径
+              </Button>
+            </div>
+          )}
         </motion.div>
         <motion.div
           className="px-1 py-2 pr-16 sm:px-4 sm:pr-20 lg:pr-24"
@@ -84,7 +91,9 @@ export function Hero({ id = "hero" }: HeroProps) {
             </ul>
             <div className="relative mx-auto w-[82%] sm:w-[58%] lg:w-[52%]">
               <HeroPortrait />
-              <AiWorkspace className="absolute left-[78%] top-0 z-20 -translate-y-3 hidden lg:block xl:left-[76%]" />
+              {forPrint ? null : (
+                <AiWorkspace className="absolute left-[78%] top-0 z-20 -translate-y-3 hidden lg:block xl:left-[76%]" />
+              )}
             </div>
             <ul className="absolute right-0 top-1/2 z-10 hidden translate-x-2 -translate-y-1/2 flex-col items-end gap-10 sm:flex md:translate-x-4 lg:translate-x-6">
               {heroSkills.right.map((label, index) => (
@@ -104,7 +113,13 @@ export function Hero({ id = "hero" }: HeroProps) {
           </div>
           <div className="mt-4 text-center lg:mt-5">
             <p className="text-base font-semibold tracking-wide text-brand-blue sm:text-lg">{heroFocus.title}</p>
-            <p className="mt-1.5 text-xs leading-relaxed tracking-wide text-brand-blue/55 sm:text-sm">{heroFocus.subtitle}</p>
+            <p
+              className={`mt-1.5 text-xs leading-relaxed tracking-wide text-brand-blue/55 sm:text-sm ${
+                forPrint ? "whitespace-nowrap" : ""
+              }`}
+            >
+              {heroFocus.subtitle}
+            </p>
           </div>
         </motion.div>
       </div>

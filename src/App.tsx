@@ -6,6 +6,8 @@ import { Navbar } from "./components/layout/Navbar"
 import { works } from "./data/content"
 import { getPathname, HOME_SECTIONS, isHomePath, usePathname } from "./lib/route"
 import { MissingWork, WorkPage } from "./pages/WorkPage"
+import { PdfExport } from "./pages/PdfExport"
+import { PdfWorkExport } from "./pages/PdfWorkExport"
 import { BentoGrid } from "./sections/BentoGrid"
 import { Hero } from "./sections/Hero"
 import { AiArchitecture } from "./sections/AiArchitecture"
@@ -26,18 +28,23 @@ function Home() {
 
 function App() {
   const path = usePathname()
+  const onHomePdf = path === "/pdf"
+  const onWorkPdf = path.startsWith("/pdf/works/")
+  const pdfWorkId = onWorkPdf
+    ? decodeURIComponent(path.slice("/pdf/works/".length).replace(/\/$/, ""))
+    : ""
+  const pdfWork = pdfWorkId ? works.find((item) => item.id === pdfWorkId) : undefined
+
   const onWorkRoute = path.startsWith("/works/")
   const onHome = isHomePath(path)
   const workId = onWorkRoute ? decodeURIComponent(path.slice("/works/".length).replace(/\/$/, "")) : ""
   const work = workId ? works.find((item) => item.id === workId) : undefined
 
   useEffect(() => {
-    if (!onWorkRoute) {
-      document.title = "乔美玲 | B端产品经理 · 全链路交付专家 | 懂技术·通售前·精交付"
-    }
-  }, [onWorkRoute])
+    if (onHomePdf || onWorkPdf || onWorkRoute) return
+    document.title = "乔美玲 | B端产品经理 · 全链路交付专家 | 懂技术·通售前·精交付"
+  }, [onHomePdf, onWorkPdf, onWorkRoute])
 
-  // Hash deep-link: #/portfolio → scroll after Home mounts
   useEffect(() => {
     if (!onHome) return
     const current = getPathname()
@@ -46,6 +53,22 @@ function App() {
     const node = document.getElementById(section)
     if (node) node.scrollIntoView({ behavior: "smooth", block: "start" })
   }, [onHome, path])
+
+  if (onHomePdf) {
+    return (
+      <MotionConfig reducedMotion="user">
+        <PdfExport />
+      </MotionConfig>
+    )
+  }
+
+  if (onWorkPdf) {
+    return (
+      <MotionConfig reducedMotion="user">
+        {pdfWork ? <PdfWorkExport work={pdfWork} /> : <MissingWork />}
+      </MotionConfig>
+    )
+  }
 
   return (
     <MotionConfig reducedMotion="user">

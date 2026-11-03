@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { Lightbulb, Palette, Rocket, TrendingUp, X, ZoomIn, type LucideIcon } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Lightbulb,
+  Palette,
+  Rocket,
+  TrendingUp,
+  X,
+  ZoomIn,
+  type LucideIcon,
+} from "lucide-react"
 import { publicAsset } from "../../lib/asset"
+
+const CAROUSEL_INTERVAL_MS = 2000
 
 export interface SpreadShot {
   id: string
@@ -88,29 +100,89 @@ function ShotMedia({ shot, flip, onOpen }: { shot: SpreadShot; flip: boolean; on
   const frames = shot.images && shot.images.length > 1 ? shot.images : [shot.image]
   const frameKey = frames.join("|")
   const [active, setActive] = useState(0)
+  const [pausedUntil, setPausedUntil] = useState(0)
+  const multi = frames.length > 1
 
   useEffect(() => {
-    if (frames.length < 2) return
+    setActive(0)
+  }, [frameKey])
+
+  useEffect(() => {
+    if (!multi) return
     const timer = window.setInterval(() => {
+      if (Date.now() < pausedUntil) return
       setActive((current) => (current + 1) % frames.length)
-    }, 1000)
+    }, CAROUSEL_INTERVAL_MS)
     return () => window.clearInterval(timer)
-  }, [frameKey, frames.length])
+  }, [frameKey, frames.length, multi, pausedUntil])
+
+  const goTo = (index: number) => {
+    setActive(((index % frames.length) + frames.length) % frames.length)
+    setPausedUntil(Date.now() + CAROUSEL_INTERVAL_MS * 2)
+  }
 
   return (
-    <button
-      type="button"
-      aria-label={`放大查看${shot.title}`}
-      onClick={() => onOpen(frames[active] ?? shot.image)}
-      className={`relative min-w-0 overflow-hidden rounded-2xl bg-brand-blue text-left shadow-soft ${
+    <div
+      className={`relative min-w-0 overflow-hidden rounded-2xl bg-brand-blue shadow-soft ${
         flip ? "lg:order-2" : "lg:order-1"
       }`}
     >
-      <ShotFrames images={frames} active={active} />
-      <span className="pointer-events-none absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md">
-        <ZoomIn className="h-3.5 w-3.5" />
-      </span>
-    </button>
+      <button
+        type="button"
+        aria-label={`放大查看${shot.title}`}
+        onClick={() => onOpen(frames[active] ?? shot.image)}
+        className="relative block w-full text-left"
+      >
+        <ShotFrames images={frames} active={active} />
+        <span className="pointer-events-none absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md">
+          <ZoomIn className="h-3.5 w-3.5" />
+        </span>
+      </button>
+
+      {multi ? (
+        <>
+          <button
+            type="button"
+            aria-label="上一张"
+            onClick={(event) => {
+              event.stopPropagation()
+              goTo(active - 1)
+            }}
+            className="absolute left-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/85 text-brand-blue shadow-soft backdrop-blur-md transition-colors hover:bg-white hover:text-brand-gold"
+          >
+            <ChevronLeft className="h-4 w-4" strokeWidth={2} />
+          </button>
+          <button
+            type="button"
+            aria-label="下一张"
+            onClick={(event) => {
+              event.stopPropagation()
+              goTo(active + 1)
+            }}
+            className="absolute right-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/85 text-brand-blue shadow-soft backdrop-blur-md transition-colors hover:bg-white hover:text-brand-gold"
+          >
+            <ChevronRight className="h-4 w-4" strokeWidth={2} />
+          </button>
+          <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center gap-1.5">
+            {frames.map((src, index) => (
+              <button
+                key={src}
+                type="button"
+                aria-label={`切换到第 ${index + 1} 张`}
+                aria-current={index === active}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  goTo(index)
+                }}
+                className={`pointer-events-auto h-1.5 rounded-full transition-all duration-300 ${
+                  index === active ? "w-5 bg-brand-gold" : "w-1.5 bg-white/55 hover:bg-white/85"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      ) : null}
+    </div>
   )
 }
 

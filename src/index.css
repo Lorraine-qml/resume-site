@@ -16,6 +16,84 @@
   }
 }
 
+/* PDF 导出页：隐藏交互 CTA，禁用作品卡跳转 */
+.pdf-export-sheet [data-pdf-hide] {
+  display: none !important;
+}
+
+.pdf-export-sheet a {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* 压平各 section 自带的上下留白，间距统一交给 .pdf-stack 的 gap */
+.pdf-export-sheet section {
+  scroll-margin-top: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.pdf-export-sheet .pdf-stack {
+  gap: 1.25rem;
+}
+
+/* 仅作品卡等小块避免截断，整段 section 不强制 avoid（否则会留出大片空白） */
+.pdf-export-sheet a.group,
+.pdf-export-sheet .rounded-card,
+.pdf-export-sheet .rounded-2xl {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    /* 浏览器页眉页脚需在打印对话框中手动取消勾选；此处尽量收紧边距 */
+    margin: 10mm;
+  }
+
+  html.pdf-export-mode,
+  html.pdf-export-mode body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  html.pdf-export-mode body {
+    overflow: visible !important;
+  }
+
+  .pdf-export-sheet {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .pdf-export-sheet section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .pdf-export-sheet .pdf-stack {
+    gap: 1.25rem;
+  }
+
+  .pdf-export-sheet a.group,
+  .pdf-export-sheet .rounded-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .pdf-export-sheet [data-pdf-hide] {
+    display: none !important;
+  }
+}
+
 @layer components {
   .orb-stage {
     perspective: 900px;

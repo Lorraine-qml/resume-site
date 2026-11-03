@@ -26,6 +26,8 @@ import { publicAsset } from "../lib/asset"
 
 interface AiArchitectureProps {
   id?: string
+  /** PDF 导出：完整展示架构标签，不做截断 */
+  forPrint?: boolean
 }
 
 type LayerTone = "business" | "core" | "data"
@@ -56,11 +58,13 @@ function TooltipChip({
   tone,
   geek,
   showAgentFlow,
+  forPrint = false,
 }: {
   node: ArchNode
   tone: LayerTone
   geek?: boolean
   showAgentFlow?: boolean
+  forPrint?: boolean
 }) {
   const [open, setOpen] = useState(false)
 
@@ -69,9 +73,28 @@ function TooltipChip({
       ? "border-brand-gold/40 bg-white text-brand-blue hover:border-brand-gold/70 hover:shadow-soft"
       : "border-brand-gold/25 bg-white text-brand-blue hover:border-brand-gold/55"
 
+  const geekIcon = geek ? (
+    node.id === "supabase" ? (
+      <Database className="h-3.5 w-3.5 shrink-0 text-brand-gold" strokeWidth={1.75} />
+    ) : (
+      <Workflow className="h-3.5 w-3.5 shrink-0 text-brand-blue" strokeWidth={1.75} />
+    )
+  ) : null
+
+  if (forPrint) {
+    return (
+      <span
+        className={`inline-flex max-w-full shrink-0 items-center justify-center gap-1 rounded-md border px-2.5 py-2 text-[12px] font-normal leading-snug ${base}`}
+      >
+        {geekIcon}
+        <span className="whitespace-normal text-center">{node.title}</span>
+      </span>
+    )
+  }
+
   return (
     <div
-      className={`relative min-w-0 flex-1 ${open ? "z-30" : ""}`}
+      className={`relative shrink-0 ${open ? "z-30" : ""}`}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       onFocus={() => setOpen(true)}
@@ -79,19 +102,13 @@ function TooltipChip({
     >
       <button
         type="button"
-        className={`inline-flex w-full items-center justify-center gap-1 overflow-hidden rounded-md border px-2.5 py-2.5 text-[13px] font-normal leading-none whitespace-nowrap transition duration-300 sm:px-3 sm:py-3 sm:text-[14px] ${base} ${
+        className={`inline-flex items-center justify-center gap-1 rounded-md border px-2.5 py-2 text-[12px] font-normal leading-snug transition duration-300 sm:px-3 sm:py-2.5 sm:text-[13px] ${base} ${
           geek && open ? "motion-safe:[&_svg]:animate-icon-nudge" : ""
         }`}
         aria-describedby={open ? `tip-${node.id}` : undefined}
       >
-        {geek ? (
-          node.id === "supabase" ? (
-            <Database className="h-3.5 w-3.5 shrink-0 text-brand-gold" strokeWidth={1.75} />
-          ) : (
-            <Workflow className="h-3.5 w-3.5 shrink-0 text-brand-blue" strokeWidth={1.75} />
-          )
-        ) : null}
-        <span className="truncate">{node.title}</span>
+        {geekIcon}
+        <span className="whitespace-nowrap text-center">{node.title}</span>
       </button>
 
       {open ? (
@@ -127,10 +144,12 @@ function ArchLayerBlock({
   layer,
   tone,
   children,
+  forPrint = false,
 }: {
   layer: ArchLayer
   tone: LayerTone
   children: ReactNode
+  forPrint?: boolean
 }) {
   const shell =
     tone === "core"
@@ -141,12 +160,16 @@ function ArchLayerBlock({
 
   return (
     <div
-      className={`relative z-[2] flex w-full min-h-[5.5rem] flex-1 flex-col items-stretch justify-center rounded-card px-4 py-4 text-center transition duration-300 hover:z-20 sm:min-h-[6.25rem] sm:px-5 sm:py-5 ${shell}`}
+      className={`relative z-[2] flex w-full flex-1 flex-col items-stretch justify-center rounded-card px-4 py-4 text-center transition duration-300 hover:z-20 sm:px-5 sm:py-5 ${
+        forPrint ? "min-h-0" : "min-h-[5.5rem] sm:min-h-[6.25rem]"
+      } ${shell}`}
     >
       <p className={`mb-3 block text-center text-[12px] tracking-[0.14em] sm:text-[13px] ${titleClass}`}>
         [ {layer.label} ]
       </p>
-      <div className="flex w-full flex-nowrap items-stretch gap-2 sm:gap-2.5">{children}</div>
+      <div className="flex w-full flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+        {children}
+      </div>
     </div>
   )
 }
@@ -211,33 +234,49 @@ function OwnerNodesCard() {
   )
 }
 
-function CompactDiagram() {
+function CompactDiagram({ forPrint = false }: { forPrint?: boolean }) {
   return (
-    <div className="relative flex h-full min-h-0 w-full flex-col items-stretch justify-between gap-1 overflow-visible rounded-2xl border border-line bg-white px-3 py-3 sm:gap-1.5 sm:px-4 sm:py-4">
+    <div
+      className={`relative flex min-h-0 w-full flex-col items-stretch gap-1 overflow-visible rounded-2xl border border-line bg-white px-3 py-3 sm:gap-1.5 sm:px-4 sm:py-4 ${
+        forPrint ? "" : "h-full justify-between"
+      }`}
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 rounded-2xl bg-arch-dots bg-[length:20px_20px] opacity-25"
       />
 
-      <ArchLayerBlock layer={businessLayer} tone="business">
+      <ArchLayerBlock layer={businessLayer} tone="business" forPrint={forPrint}>
         {businessLayer.nodes.map((node) => (
-          <TooltipChip key={node.id} node={node} tone="business" />
+          <TooltipChip key={node.id} node={node} tone="business" forPrint={forPrint} />
         ))}
       </ArchLayerBlock>
 
       <DataBus />
 
-      <ArchLayerBlock layer={aiCoreLayer} tone="core">
+      <ArchLayerBlock layer={aiCoreLayer} tone="core" forPrint={forPrint}>
         {aiCoreLayer.nodes.map((node) => (
-          <TooltipChip key={node.id} node={node} tone="core" showAgentFlow={node.id === "agent"} />
+          <TooltipChip
+            key={node.id}
+            node={node}
+            tone="core"
+            showAgentFlow={node.id === "agent"}
+            forPrint={forPrint}
+          />
         ))}
       </ArchLayerBlock>
 
       <DataBus delay />
 
-      <ArchLayerBlock layer={dataLayer} tone="data">
+      <ArchLayerBlock layer={dataLayer} tone="data" forPrint={forPrint}>
         {dataLayer.nodes.map((node) => (
-          <TooltipChip key={node.id} node={node} tone="data" geek={geekNodeIds.has(node.id)} />
+          <TooltipChip
+            key={node.id}
+            node={node}
+            tone="data"
+            geek={geekNodeIds.has(node.id)}
+            forPrint={forPrint}
+          />
         ))}
       </ArchLayerBlock>
     </div>
@@ -342,21 +381,28 @@ function ArchitectPortrait() {
   )
 }
 
-function SummaryStack() {
+function SummaryStack({ forPrint = false }: { forPrint?: boolean }) {
   const { role, scenes } = architectureSummary
+  const cardGrow = forPrint ? "shrink-0" : "flex-1"
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3 sm:gap-3.5">
+    <div className={`flex min-h-0 flex-col gap-3 sm:gap-3.5 ${forPrint ? "" : "h-full"}`}>
       <ArchitectPortrait />
 
-      <article className="flex min-h-[4.5rem] flex-1 items-center rounded-card border border-line border-l-4 border-l-brand-gold bg-white px-4 py-4 shadow-card sm:min-h-[5rem] sm:py-5">
+      <article
+        className={`flex min-h-[4.5rem] items-center rounded-card border border-line border-l-4 border-l-brand-gold bg-white px-4 py-4 shadow-card sm:min-h-[5rem] sm:py-5 ${cardGrow}`}
+      >
         <div className="flex w-full items-center gap-2.5">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-gold/10 text-brand-gold">
             <UserRound className="h-4 w-4" strokeWidth={1.75} />
           </span>
           <div className="min-w-0 flex-1">
             <h3 className="text-[13px] font-normal leading-none text-brand-blue sm:text-[14px]">{role.title}</h3>
-            <p className="mt-2 truncate text-[12px] font-normal leading-snug text-copy sm:text-[13px]">
+            <p
+              className={`mt-2 text-[12px] font-normal leading-snug text-copy sm:text-[13px] ${
+                forPrint ? "" : "truncate"
+              }`}
+            >
               <span className="text-brand-gold">{role.lead}</span>
               · {role.body}
             </p>
@@ -364,14 +410,20 @@ function SummaryStack() {
         </div>
       </article>
 
-      <article className="flex min-h-[4.5rem] flex-1 items-center rounded-card border border-line bg-white px-4 py-4 shadow-card sm:min-h-[5rem] sm:py-5">
+      <article
+        className={`flex min-h-[4.5rem] items-center rounded-card border border-line bg-white px-4 py-4 shadow-card sm:min-h-[5rem] sm:py-5 ${cardGrow}`}
+      >
         <div className="flex w-full items-center gap-2.5">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-blue/5 text-brand-blue">
             <Target className="h-4 w-4" strokeWidth={1.75} />
           </span>
           <div className="min-w-0 flex-1">
             <h3 className="text-[13px] font-normal leading-none text-brand-blue sm:text-[14px]">{scenes.title}</h3>
-            <p className="mt-2 truncate text-[12px] font-normal leading-snug text-copy sm:text-[13px]">
+            <p
+              className={`mt-2 text-[12px] font-normal leading-snug text-copy sm:text-[13px] ${
+                forPrint ? "" : "truncate"
+              }`}
+            >
               {scenes.items.map((item, index) => (
                 <span key={item.title}>
                   {index > 0 ? <span className="mx-1.5 text-line">|</span> : null}
@@ -388,12 +440,23 @@ function SummaryStack() {
   )
 }
 
-export function AiArchitecture({ id = "architecture" }: AiArchitectureProps) {
+export function AiArchitecture({ id = "architecture", forPrint = false }: AiArchitectureProps) {
   return (
-    <section id={id} className="scroll-mt-20 bg-white pb-8 pt-6 md:pb-10 md:pt-8">
-      <div className="mx-auto w-full max-w-[1520px] px-5 pr-16 sm:pr-20 lg:px-8 lg:pr-24 xl:px-10">
+    <section
+      id={id}
+      className={
+        forPrint
+          ? "bg-white"
+          : "scroll-mt-20 bg-white pb-8 pt-6 md:pb-10 md:pt-8"
+      }
+    >
+      <div
+        className={`mx-auto w-full max-w-[1520px] px-5 lg:px-8 xl:px-10 ${
+          forPrint ? "px-0 lg:px-0" : "pr-16 sm:pr-20 lg:pr-24"
+        }`}
+      >
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={forPrint ? false : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.4, ease: "easeOut" }}
@@ -417,22 +480,26 @@ export function AiArchitecture({ id = "architecture" }: AiArchitectureProps) {
           下排 · 极速交付流 = 核心负责节点（同高）
         */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={forPrint ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.45, delay: 0.05, ease: "easeOut" }}
-          className="mt-5 grid grid-cols-1 gap-3 sm:gap-3.5 lg:mt-6 lg:min-h-[32rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:grid-rows-[minmax(0,1fr)_auto] lg:gap-x-7 lg:gap-y-3"
+          className={`mt-5 grid grid-cols-1 gap-3 sm:gap-3.5 lg:mt-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-x-7 lg:gap-y-3 ${
+            forPrint
+              ? "lg:grid-rows-[auto_auto] lg:items-start"
+              : "lg:min-h-[32rem] lg:grid-rows-[minmax(0,1fr)_auto]"
+          }`}
         >
-          <div className="min-h-0 lg:row-start-1">
-            <SummaryStack />
+          <div className={`min-h-0 lg:row-start-1 ${forPrint ? "lg:self-start" : ""}`}>
+            <SummaryStack forPrint={forPrint} />
           </div>
-          <div className="min-h-0 lg:row-start-1">
-            <CompactDiagram />
+          <div className={`min-h-0 lg:row-start-1 ${forPrint ? "lg:self-start" : ""}`}>
+            <CompactDiagram forPrint={forPrint} />
           </div>
-          <div className="lg:row-start-2">
+          <div className="lg:row-start-2 lg:self-start">
             <OwnerNodesCard />
           </div>
-          <div className="lg:row-start-2">
+          <div className="lg:row-start-2 lg:self-start">
             <VibeCodingBar />
           </div>
         </motion.div>
